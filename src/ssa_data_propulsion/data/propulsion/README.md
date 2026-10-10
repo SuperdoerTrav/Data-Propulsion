@@ -1,9 +1,9 @@
-# SSAPy Propulsion Data
+# Propulsion Data
 
-This directory stores redistributable propulsion data for SSAPy Toolkit.
+This directory stores redistributable propulsion data.
 
 Policy:
-- Store reusable propulsion data here, not in `SSAPy-Toolkit`.
+- Store reusable propulsion data here.
 - Prefer normalized CSV for small tables and original source files only when their license explicitly permits redistribution.
 - Record source, license, retrieval date, and transformation notes in `sources.json`.
 - Do not add manufacturer datasheets, extracted images, or unknown-license curves.

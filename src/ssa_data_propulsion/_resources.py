@@ -1,4 +1,4 @@
-"""Resource helpers for data packaged in ``ssapy_data`` wheels."""
+"""Resource helpers for data packaged in ``ssa-data-*`` wheels."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from pathlib import Path, PurePosixPath
 from typing import Iterator
 
 DATA_ROOT = "data"
-PACKAGE = "ssapy_data_propulsion"
+PACKAGE = "ssa_data_propulsion"
 
 
 class DataResourceNotFoundError(FileNotFoundError):
@@ -26,7 +26,7 @@ def data_resource(
     data_root: str | PathLike[str] = DATA_ROOT,
     must_exist: bool = True,
 ) -> Traversable:
-    """Return an ``importlib.resources`` object for packaged SSAPy data.
+    """Return an ``importlib.resources`` object for packaged SSA data.
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def data_resource(
         POSIX-style path below ``data_root``. Absolute paths and ``..`` traversal
         are rejected.
     data_root
-        Directory inside ``ssapy_data`` that contains data resources.
+        Directory inside ``ssa_data_propulsion`` that contains data resources.
     must_exist
         If ``True``, raise :class:`DataResourceNotFoundError` when the resource
         is missing.
