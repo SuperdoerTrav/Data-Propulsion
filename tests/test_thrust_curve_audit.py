@@ -1,10 +1,11 @@
 """Audit every packaged solid-motor thrust curve against its own catalog data.
 
-Guards against repeating the 2026-10-26 incident where a packaged curve
-(Estes C6) integrated to a total impulse 13.6% above its catalog value and
-above the upper bound of its stated NAR/TRA impulse class. See
+A packaged curve's own samples must integrate to a total impulse consistent
+with the sidecar's ``totImpulseNs`` and with the NAR/TRA impulse class it is
+filed under, and the samples themselves must be physically sane (increasing
+time, non-negative thrust, ending at zero). See
 ``src/ssa_data_propulsion/data/propulsion/source_audit.md`` for the audit
-write-up.
+history and the rationale behind each exception below.
 """
 from __future__ import annotations
 
@@ -39,23 +40,70 @@ IMPULSE_CLASS_LIMITS = {
     "O": (20480.01, 40960.00),
 }
 
-# Relative tolerance for comparing an independent trapezoid integration of the
-# packaged samples against the catalog's reported totImpulseNs/burnTimeS/
-# maxThrustN. RASP/RockSim simulator files are deliberately reduced to a
-# handful of samples, so peak thrust and burn time in particular can differ
-# noticeably from the full-resolution certified data without the packaged
-# curve being wrong; these bounds are set above the worst case seen in the
-# 2026-10-26 audit (max impulse error 21.2%, max thrust error 91.8%, burn
-# time error 62% of the catalog burn time, from samples whose decay tail runs
-# past the catalog's burnout-threshold convention) so a new, much larger
-# deviation still fails the build. Curves recorded as exceptions below are
-# known, audited boundary-exact or borderline impulse-class cases that are
-# not curve defects (see source_audit.md); every other packaged curve must
-# pass within tolerance.
-IMPULSE_TOLERANCE = 0.25
-BURN_TIME_MIN_TOLERANCE_S = 2.0
-BURN_TIME_RELATIVE_TOLERANCE = 0.75
-MAX_THRUST_TOLERANCE = 1.0
+# A packaged curve must integrate to within this fraction of its own catalog
+# totImpulseNs. This is the primary accuracy gate: it is what would have
+# caught the Estes C6 curve (which integrated 13.6% high), and it is checked
+# together with the class-limit assertion below so a curve cannot silently
+# drift into a different impulse class than the one it is filed under.
+IMPULSE_TOLERANCE = 0.10
+
+# Certified/manufacturer curves whose integrated impulse is still beyond
+# IMPULSE_TOLERANCE, keyed by simfile ID. Each has a certified or
+# manufacturer provenance, stays within its stated NAR/TRA class, and has no
+# better in-package alternative, so these are recorded exceptions rather than
+# removed curves or a loosened tolerance. See source_audit.md for the full
+# table of measured vs. catalog values.
+IMPULSE_TOLERANCE_EXCEPTIONS = {
+    "5f4294d20002e90000000869": (
+        "AeroTech M6000ST: certified measurement integrates to ~9605 Ns vs "
+        "catalog 8247.1 Ns; catalog figure differs from the certified data."
+    ),
+    "5f4294d20002e9000000083d": (
+        "Loki I316-SF: certified measurement integrates to ~474 Ns vs "
+        "catalog 408.6 Ns; catalog figure differs from the certified data."
+    ),
+    "5f4294d20002e900000000ad": (
+        "Ellis J330: certified measurement integrates to ~853 Ns vs catalog "
+        "737.8 Ns; catalog figure differs from the certified data."
+    ),
+    "5f4294d20002e900000000fd": (
+        "RATT H70: certified measurement integrates to ~177 Ns vs catalog "
+        "207.5 Ns; catalog figure differs from the certified data."
+    ),
+    "5f4294d20002e900000000e7": (
+        "Hypertek 440CC125J-J250: certified measurement integrates to ~644 "
+        "Ns vs catalog 744.5 Ns; catalog figure differs from the certified "
+        "data."
+    ),
+    "5f4294d20002e900000000a9": (
+        "Ellis I230: certified measurement integrates to ~611 Ns vs catalog "
+        "540 Ns; catalog figure differs from the certified data."
+    ),
+    "5f4294d20002e900000000a5": (
+        "Ellis I150: certified measurement integrates to ~387 Ns vs catalog "
+        "346.2 Ns; catalog figure differs from the certified data."
+    ),
+    "5f4294d20002e90000000877": (
+        "AeroTech J1799N (RASP): certified measurement integrates to ~1074 "
+        "Ns vs catalog 1214.8 Ns; catalog figure differs from the certified "
+        "data."
+    ),
+    "5f4294d20002e90000000878": (
+        "AeroTech J1799N (RockSim): certified measurement integrates to "
+        "~1076 Ns vs catalog 1214.8 Ns; catalog figure differs from the "
+        "certified data."
+    ),
+    "5f4294d20002e900000000eb": (
+        "Hypertek 835CC125J-K240: certified measurement integrates to "
+        "~1423 Ns vs catalog 1292 Ns; catalog figure differs from the "
+        "certified data."
+    ),
+    "5f4294d20002e90000000881": (
+        "Hypertek 835CC125J-K240 (second certified simfile): integrates to "
+        "~1423 Ns vs catalog 1292 Ns; catalog figure differs from the "
+        "certified data."
+    ),
+}
 
 # motor-class-boundary-exact curves audited and accepted in source_audit.md:
 # their catalog totImpulseNs sits at (or a fraction of a percent from) the
@@ -79,6 +127,17 @@ CLASS_BOUNDARY_EXCEPTIONS = {
     "quest_b6w_rasp_60ae6058d83fc60004c69f18.csv",
     "quest_b6w_rocksim_618ed8392bb16e00041a2ec5.csv",
 }
+
+# Gross-error sanity bounds, not accuracy checks: RASP/RockSim simulator
+# files are deliberately reduced to a handful of samples, so a coarse sample
+# can legitimately miss the true peak thrust or run its decay tail past the
+# catalog's burnout-threshold convention by a large margin without being
+# wrong. These bounds exist only to catch something categorically broken
+# (e.g. a unit-conversion mistake or a swapped/truncated file), not to
+# assert the sample closely matches the catalog figure.
+BURN_TIME_MIN_TOLERANCE_S = 2.0  # catches a curve many times longer/shorter than its catalog burn
+BURN_TIME_RELATIVE_TOLERANCE = 0.75  # ditto, scaled for long-burning motors
+MAX_THRUST_TOLERANCE = 1.0  # catches a peak thrust off by more than 2x (e.g. a unit mixup)
 
 
 def _trapz(times: list[float], thrusts: list[float]) -> float:
@@ -106,6 +165,7 @@ def index_rows():
 @pytest.mark.parametrize("csv_name", _curve_ids())
 def test_packaged_curve_matches_catalog(csv_name, index_rows):
     row = index_rows[csv_name]
+    simfile_id = row["simfile_id"]
 
     with open_text(f"{THRUST_CURVE_DIR}/{csv_name}") as handle:
         reader = csv.DictReader(handle)
@@ -135,17 +195,18 @@ def test_packaged_curve_matches_catalog(csv_name, index_rows):
     cat_max_thrust = motor.get("maxThrustN")
 
     impulse_err = abs(integrated_impulse - cat_impulse) / cat_impulse
-    assert impulse_err <= IMPULSE_TOLERANCE, (
-        f"{csv_name}: trapezoid impulse {integrated_impulse:.4f} Ns differs "
-        f"from catalog totImpulseNs {cat_impulse} Ns by {impulse_err:.1%}, "
-        f"exceeding the {IMPULSE_TOLERANCE:.0%} tolerance"
-    )
+    if simfile_id not in IMPULSE_TOLERANCE_EXCEPTIONS:
+        assert impulse_err <= IMPULSE_TOLERANCE, (
+            f"{csv_name}: trapezoid impulse {integrated_impulse:.4f} Ns differs "
+            f"from catalog totImpulseNs {cat_impulse} Ns by {impulse_err:.1%}, "
+            f"exceeding the {IMPULSE_TOLERANCE:.0%} tolerance"
+        )
 
     burn_err = abs(burn_time - cat_burn)
     burn_tolerance = max(BURN_TIME_MIN_TOLERANCE_S, BURN_TIME_RELATIVE_TOLERANCE * cat_burn)
     assert burn_err <= burn_tolerance, (
         f"{csv_name}: sampled burn time {burn_time:.3f}s differs from "
-        f"catalog burnTimeS {cat_burn}s by {burn_err:.3f}s"
+        f"catalog burnTimeS {cat_burn}s by {burn_err:.3f}s (gross-error bound)"
     )
 
     # maxThrustN is absent from a number of catalog records (not something
@@ -155,7 +216,8 @@ def test_packaged_curve_matches_catalog(csv_name, index_rows):
         max_thrust_err = abs(max_thrust - cat_max_thrust) / cat_max_thrust
         assert max_thrust_err <= MAX_THRUST_TOLERANCE, (
             f"{csv_name}: sampled max thrust {max_thrust:.3f} N differs from "
-            f"catalog maxThrustN {cat_max_thrust} N by {max_thrust_err:.1%}"
+            f"catalog maxThrustN {cat_max_thrust} N by {max_thrust_err:.1%} "
+            "(gross-error bound)"
         )
 
     impulse_class = row["impulse_class"]
@@ -187,3 +249,11 @@ def test_index_matches_packaged_files():
         f"in index only: {index_csv_names - packaged_csv_names}; "
         f"on disk only: {packaged_csv_names - index_csv_names}"
     )
+
+
+def test_impulse_tolerance_exceptions_are_still_present():
+    """The exception mapping should only ever reference packaged curves."""
+
+    simfile_ids = {row["simfile_id"] for row in _load_index_rows()}
+    stale = set(IMPULSE_TOLERANCE_EXCEPTIONS) - simfile_ids
+    assert not stale, f"exception entries for simfile IDs no longer packaged: {stale}"
