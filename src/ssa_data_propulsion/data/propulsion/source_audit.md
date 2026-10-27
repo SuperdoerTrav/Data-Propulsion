@@ -9,8 +9,8 @@ repeat the same source review or accidentally package data without clear rights.
 
 - ThrustCurve.org public-domain RASP/RockSim samples: 596 solid/hybrid motor
   time-thrust curves under `thrust_curves/solid_motor_pd/thrustcurve_org/` as
-  originally imported; 585 remain after the 2026-10-26 audit below removed
-  11 curves found to be inconsistent with their own catalog metadata.
+  originally imported; 582 remain after the 2026-10-26 audits below removed
+  14 curves found to be inconsistent with their own catalog metadata.
 - NASA NTRS 20100042402: NEXT TT10 electric-propulsion thrust comparison
   table under `throttle_maps/electric/next_tt10_thrust_comparison.csv`.
 - NASA NTRS 20210023838: HERMeS TDU-3 electric-propulsion reference and
@@ -147,7 +147,7 @@ burnout-threshold convention while the packaged RASP/RockSim sample runs out
 the full thrust decay tail to true zero. This is expected and is not a data
 defect; the packaged regression test's burn-time tolerance accounts for it.
 
-61 of the 585 remaining curves have no `maxThrustN` in their catalog sidecar
+61 of the 582 remaining curves have no `maxThrustN` in their catalog sidecar
 at all (the field was never populated by the original import). The
 regression test skips the max-thrust check for those curves rather than
 treating a missing field as a failure; re-running the (currently absent)
@@ -155,6 +155,56 @@ import script against a live thrustcurve.org would be the way to backfill it.
 
 A regression test enforcing these checks for every packaged curve lives at
 `tests/test_thrust_curve_audit.py`.
+
+## 2026-10-26 Follow-up: Tightened Impulse Tolerance
+
+The first pass above used a 25% impulse tolerance in the regression test,
+which was loose enough to let a repeat of the Estes C6 defect (+13.6%)
+through. The policy is now: a packaged curve must integrate to within 10% of
+its sidecar `totImpulseNs`, in addition to the class-limit check above.
+Re-running the independent trapezoid audit against the 585 curves packaged
+at that point found 14 curves beyond 10%.
+
+Three were `source: user` curves with no certified/manufacturer provenance
+and were removed:
+
+- `aerotech_m6000st_rocksim_5f924ab81bca5800041717fe.csv` (AeroTech M6000ST,
+  +16.5%). A certified simfile for the same motor,
+  `aerotech_m6000st_rasp_5f4294d20002e90000000869.csv`, is already packaged
+  and was kept (it is itself beyond 10%; see the exception list below).
+- `amw_sk_98_17500_rasp_601a296b66316a0004301376.csv` (AMW SK-98-17500,
+  +20.4%). No alternate simfile is packaged for this motor and
+  thrustcurve.org is unreachable, so it was dropped rather than replaced.
+- `aerotech_g78g_l_rocksim_5f92410b1bca580004171722.csv` (AeroTech G78G/L,
+  +21.2%). A second, already-packaged simfile for the same motor,
+  `aerotech_g78g_l_rasp_682f41400b264d0002aaad78.csv`, integrates to within
+  0.15% of the catalog impulse and was kept instead, so no network fetch was
+  needed.
+
+582 curves remain packaged.
+
+The remaining 11 curves beyond 10% are all `source: cert`. None of them
+cross a NAR/TRA class boundary, so these read as the certified simfile's own
+measured burn disagreeing with the catalog's separately reported
+`totImpulseNs` figure, not a packaging defect, and there is no better
+alternative to swap in. They are kept and recorded, by simfile ID, in the
+`IMPULSE_TOLERANCE_EXCEPTIONS` mapping in
+`tests/test_thrust_curve_audit.py` so the test documents rather than hides
+them:
+
+| Simfile ID | Motor | Integrated (Ns) | Catalog totImpulseNs | Error |
+| --- | --- | --- | --- | --- |
+| `5f4294d20002e90000000869` | AeroTech M6000ST | 9604.6 | 8247.1 | +16.5% |
+| `5f4294d20002e9000000083d` | Loki I316-SF | 474.0 | 408.6 | +16.0% |
+| `5f4294d20002e900000000ad` | Ellis J330 | 853.3 | 737.8 | +15.7% |
+| `5f4294d20002e900000000fd` | RATT H70 | 176.8 | 207.5 | -14.8% |
+| `5f4294d20002e900000000e7` | Hypertek 440CC125J-J250 | 644.1 | 744.5 | -13.5% |
+| `5f4294d20002e900000000a9` | Ellis I230 | 610.5 | 540.0 | +13.1% |
+| `5f4294d20002e900000000a5` | Ellis I150 | 387.4 | 346.2 | +11.9% |
+| `5f4294d20002e90000000877` | AeroTech J1799N (RASP) | 1074.4 | 1214.8 | -11.6% |
+| `5f4294d20002e90000000878` | AeroTech J1799N (RockSim) | 1075.7 | 1214.8 | -11.4% |
+| `5f4294d20002e900000000eb` | Hypertek 835CC125J-K240 | 1422.7 | 1292.0 | +10.1% |
+| `5f4294d20002e90000000881` | Hypertek 835CC125J-K240 (2nd cert file) | 1422.7 | 1292.0 | +10.1% |
 
 ## Current Gaps
 
