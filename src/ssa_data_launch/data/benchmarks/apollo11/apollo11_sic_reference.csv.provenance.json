@@ -18,6 +18,50 @@
     "max_abs_position_norm_residual_m": 0.40936584305018187,
     "position_norm_tolerance_m": 0.5,
     "max_abs_velocity_norm_residual_m_s": 0.18533578964297703,
-    "velocity_norm_tolerance_m_s": 0.2
+    "velocity_norm_tolerance_m_s": 0.2,
+    "geodetic_frame_checkpoints": [
+      {
+        "time_s": 0.0,
+        "latitude_deg_north": 28.6084,
+        "longitude_deg_west": -80.6,
+        "source_table": "2.2",
+        "source_pdf_page": 14
+      },
+      {
+        "time_s": 40.0,
+        "latitude_deg_north": 28.6083,
+        "longitude_deg_west": -80.6,
+        "source_table": "2.2",
+        "source_pdf_page": 14
+      },
+      {
+        "time_s": 80.0,
+        "latitude_deg_north": 28.6208,
+        "longitude_deg_west": -80.56,
+        "source_table": "2.2",
+        "source_pdf_page": 14
+      },
+      {
+        "time_s": 100.0,
+        "latitude_deg_north": 28.6436,
+        "longitude_deg_west": -80.48,
+        "source_table": "2.2",
+        "source_pdf_page": 14
+      },
+      {
+        "time_s": 135.0,
+        "latitude_deg_north": 28.7363,
+        "longitude_deg_west": -80.15,
+        "source_table": "2.2",
+        "source_pdf_page": 14
+      },
+      {
+        "time_s": 161.59,
+        "latitude_deg_north": 28.8658,
+        "longitude_deg_west": -79.69,
+        "source_table": "2.2",
+        "source_pdf_page": 14
+      }
+    ]
   }
 }
