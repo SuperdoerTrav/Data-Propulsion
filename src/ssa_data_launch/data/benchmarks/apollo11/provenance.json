@@ -1,0 +1,55 @@
+{
+  "schema": "ssa_data_launch.provenance.v1",
+  "case_id": "apollo11_as506_parking_orbit_insertion",
+  "title": "Apollo 11 AS-506 event and parking-orbit benchmark",
+  "source": {
+    "citation": "NASA CR-61291, AS-506 \"G\" Manned Lunar Landing Mission Post-Launch Operational Trajectory for July 16, 1969, Northrop Corporation, August 1969",
+    "url": "https://ntrs.nasa.gov/citations/19690026499",
+    "report_number": "NASA CR-61291",
+    "pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
+    "flight_date_utc": "1969-07-16",
+    "guidance_reference_release_utc": "1969-07-16T13:31:43.02",
+    "liftoff_utc": "1969-07-16T13:32:00",
+    "first_motion_utc": "1969-07-16T13:31:59.6",
+    "trajectory_origin": "first motion",
+    "report_statement": "The report contains the real-time operational trajectory using the actual Greenwich Mean Time Guidance Reference Release supplied by the Manned Spacecraft Center.",
+    "tables": {
+      "critical_event_sequence": {
+        "number": "2.1",
+        "pdf_page_range": [8, 12]
+      },
+      "trajectory_data": {
+        "number": "2.2",
+        "pdf_page_range": [13, 55]
+      },
+      "trajectory_summary": {
+        "number": "2.4",
+        "printed_pages": [116, 117],
+        "pdf_pages": [122, 123]
+      }
+    }
+  },
+  "payload": {
+    "path": "benchmarks/apollo11/apollo11_benchmark.json",
+    "source_tables": ["2.1", "2.2", "2.4"],
+    "sha256": "8378d693e94f13193e6921ab9f2ece8e283f3fea23b308942827bfae0e1e937d",
+    "event_count": 11
+  },
+  "extraction": {
+    "method": "Read the report's embedded text for Tables 2.1 and 2.4; visually verify the retained summary values against rendered PDF pages 122-123. Manually transcribe the Table 2.2 launch state from rendered PDF page 18, EPOI state/geodetic coordinates from pages 50 and 54, four intermediate geodetic checkpoints, and staged vehicle mass rows from pages 13, 25, 26 and 49. Check launch/EPOI vector norms against scalar summary values. The SSATK demo derives a proper fixed-frame rotation by aligning the launch state with the WGS84/IERS-B pad state, then checks the result against the Table 2.2 EPOI and intermediate geodetic coordinates. NASA-TM-X-62812 provides a separate approximate AS-506 mass history and total propellant-consumption summary. This inferred orientation and operational guidance product are source-closure evidence, not independent frame or flight truth. No OCR-derived trajectory profile is included in the package.",
+    "software_versions": {
+      "pdftotext": "pdftotext version 20.11.0",
+      "pdftoppm": "pdftoppm version 20.11.0"
+    },
+    "limitations": [
+      "The operational guidance trajectory is not raw sensor telemetry or an independent post-flight best-estimate trajectory.",
+      "NASA CR-61291 Tables 2.1 and 2.4 report different S-II center-engine-cutoff times; the discrepancy remains unresolved.",
+      "NASA CR-61291 Table 2.4 and the Apollo 11 Mission Report differ in maximum dynamic pressure (34725.243 Pa versus 735 lb/ft^2, or 35191.990351 Pa); retain both source values.",
+      "Table 2.2 reports total vehicle mass increasing by 919.32 kg from S-II cutoff to S-IVB ullage ignition; this interval is preserved but not used as a mass-conservation reference.",
+      "The Table 2.2 insertion state and Table 2.4 eccentricity/period do not close as one osculating two-body orbit under SSATK's Earth gravitational parameter.",
+      "Table 2.4's printed twice-specific-energy sign conflicts with its bound-orbit eccentricity and period; specific energy is excluded.",
+      "The event summary supports benchmark closure only; it does not provide the full trajectory samples or engineering inputs for predictive ascent simulation.",
+      "A benchmark pass against this report does not establish flight qualification or independent measured-flight accuracy."
+    ]
+  }
+}

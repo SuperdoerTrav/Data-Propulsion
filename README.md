@@ -1,7 +1,45 @@
-# Propulsion Data Component
+# SSA Propulsion and Launch Data
 
-This repository contains public, independently installable propulsion data
-resources for scientific software. The data files are provided under the
-licenses recorded in the public provenance ledger.
+This repository builds the `ssa-data-propulsion` Python distribution. It
+contains provenance-tracked propulsion resources and optional launch
+reference data for scientific software. Installable modules are:
+
+- `ssa_data_propulsion`: propulsion and engine reference data.
+- `ssa_data_launch`: Apollo 11 source summaries and the NASA NESC Case 17
+  inter-tool verification inputs.
+
+Both modules ship in the same distribution. The current combined data payload
+is well below PyPI's 100 MB per-file upload limit. If a future wheel or source
+distribution approaches that limit, split launch and propulsion into separate
+distributions before publishing the oversized artifact.
+
+## Launch Reference Data
+
+The Apollo 11 package records selected events, launch and insertion states,
+mass checkpoints, and source discrepancies from NASA reports. The reports
+themselves are not redistributed, and the operational guidance record is not
+independent flight truth.
+The experimental extractor for the report's full 5-second trajectory table is
+retained under `scripts/`, but it does not currently pass source-closure
+checks; no full-profile trajectory is included.
+
+The NASA NESC Case 17 package contains the published idealized two-stage
+verification model and anonymized reference histories. It is not a flown
+vehicle or a flight-validation dataset. See each benchmark's `provenance.json`
+for source hashes, transformations, units, limitations, and unresolved
+discrepancies.
+
+The package's MIT license applies to software, not automatically to the
+included datasets. Dataset source rights and attribution are documented in
+`NOTICE` and the per-resource provenance records.
+
+For a local source install and verification:
+
+```bash
+python3 -m pip install -e .
+python3 -m pytest
+python3 -m build
+python3 -m twine check dist/*
+```
 
 LLNL-CODE-2015996
