@@ -1,0 +1,304 @@
+{
+  "schema": "ssa_data_launch.nasa42_case.v1",
+  "case_id": "nasa_nesc_atmospheric_case_17_two_stage_rocket",
+  "source": {
+    "citation": "NASA Engineering and Safety Center, NESC-RP-12-00770, Check-Cases for Verification of 6-Degree-of-Freedom Flight Vehicle Simulations, Volume II: Appendices, Appendix B.1.6 and C.1.20",
+    "url": "https://ntrs.nasa.gov/citations/20150001264",
+    "report_pdf_sha256": "2786f37fa02dba67e776de294038f7d8734b3de2cdd14d70b70a0db4b52f41f0",
+    "models_page": "NESC Academy 2015 Flight Simulation Checkcases",
+    "models_url": "https://nescacademy.nasa.gov/flightsim/2015",
+    "models_archive_url": "https://nescacademy.nasa.gov/src/flightsim/Models/Atmospheric_models.zip",
+    "models_archive_sha256": "10e2dc267856ef37eaedbcdd16eb49a8c44b39301054de0fa78292c1c4aba3bc",
+    "nested_model_archive_sha256": "0be22896aea43bde1cc726c53a91ff890a4cf1483094b10d132295d5c37f76cb"
+  },
+  "classification": "IDEALIZED_INTERTOOL_VERIFICATION_CASE_NOT_REAL_FLIGHT",
+  "scenario": {
+    "initial_geodetic": {
+      "latitude_deg": 0.0,
+      "longitude_deg_east": 0.0,
+      "altitude_m": 0.0
+    },
+    "initial_euler_nasa_yaw_pitch_roll_deg": [
+      90.0,
+      55.22,
+      0.0
+    ],
+    "initial_velocity_eci_m_s": [
+      0.1,
+      465.1010849,
+      0.0
+    ],
+    "initial_velocity_frame_note": "Components are radial-outward, east, north in the case EI frame; 0.1 m/s is the published local-up velocity and the east component includes launch-site co-rotation.",
+    "initial_body_rate_relative_to_launch_site_roll_pitch_yaw_deg_s": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "reference_initial_body_rate_wrt_ei_roll_pitch_yaw_deg_s": [
+      0.0,
+      -0.00417807413224,
+      0.0
+    ],
+    "reference_initial_body_rate_sample_time_s": 0.0,
+    "reference_initial_body_rate_note": "An anonymized trajectory output at t=0; this is not the published scenario input, which specifies zero body rate relative to the rotating launch site.",
+    "duration_s": 200.0,
+    "interstage_coast_after_first_burnout_s": 96.79,
+    "guidance": "None; stable unguided vehicle pitches over under gravity",
+    "gravity": "Earth point mass plus J2 using WGS-84 geodesy",
+    "atmosphere": "U.S. Standard Atmosphere 1976; no wind; density set to zero above 86 km",
+    "angular_momentum_flux_fraction": 0.5,
+    "angular_momentum_flux_source": "NESC-RP-12-00770, Volume II, Appendix B.1.6, p. 33; external simulation logic, not twostage_inertia.dml"
+  },
+  "source_discrepancies": [
+    {
+      "topic": "initial_velocity",
+      "report_value": "0.32808399 ft/s upward relative to the launch site (0.1 m/s)",
+      "model_package_readme_value": "0.1 ft/s along body X",
+      "selected_basis": "Volume II, Appendices, pp. 34 and 68; the selected upward 0.1 m/s component is corroborated by the three trajectory CSVs"
+    },
+    {
+      "topic": "initial_body_rate_frame",
+      "scenario_value": "zero relative to the rotating launch site",
+      "trajectory_output_value": "bodyAngularRateWrtEi includes the Earth-rate transformation",
+      "selected_basis": "Volume II, Appendices, p. 68 for initial conditions and p. 56 for output-frame definitions"
+    },
+    {
+      "topic": "thermosphere_outputs",
+      "detail": "SIM 6 retains nonzero atmospheric fields above 86 km; NASA excludes these channels from Case 17 comparison",
+      "selected_basis": "Volume II, Appendices, p. 595"
+    },
+    {
+      "topic": "initial_vehicle_geometry",
+      "detail": "The vehicle center of mass starts at sea level, placing the lower vehicle below the surface",
+      "selected_basis": "Volume II, Appendices, p. 34"
+    },
+    {
+      "topic": "yaw_inertia",
+      "report_value": "Table 16 lists Izz equal to Ixx",
+      "model_value": "twostage_inertia.dml computes Izz equal to Iyy",
+      "selected_basis": "The simulator follows the explicit DAVE-ML output equation; both values are retained"
+    }
+  ],
+  "vehicle": {
+    "stage_1": {
+      "length_m": 25.0,
+      "diameter_m": 3.0,
+      "dry_mass_kg": 35000.0,
+      "propellant_mass_kg": 180000.0,
+      "thrust_n": 17000000.0,
+      "specific_impulse_s": 360.0
+    },
+    "stage_2": {
+      "length_m": 10.0,
+      "diameter_m": 3.0,
+      "dry_mass_kg": 15000.0,
+      "propellant_mass_kg": 80000.0,
+      "payload_mass_kg": 4000.0,
+      "thrust_n": 5000000.0,
+      "specific_impulse_s": 390.0
+    },
+    "aerodynamics": {
+      "reference_area_m2": 7.0,
+      "reference_lengths_m": [
+        3.0,
+        3.0,
+        3.0
+      ],
+      "alpha_force_breakpoints_deg": [
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "lift_coefficients": [
+        -1.6,
+        -1.0,
+        -0.73,
+        -0.49,
+        -0.24,
+        0,
+        0.24,
+        0.49,
+        0.73,
+        1.0,
+        1.6
+      ],
+      "drag_coefficients": [
+        0.48,
+        0.38,
+        0.31,
+        0.25,
+        0.23,
+        0.21,
+        0.23,
+        0.25,
+        0.31,
+        0.38,
+        0.48
+      ],
+      "beta_force_breakpoints_deg": [
+        -10,
+        -8,
+        -6,
+        -4,
+        -2,
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "sideforce_coefficients": [
+        1.6,
+        1.0,
+        0.73,
+        0.49,
+        0.24,
+        0,
+        -0.24,
+        -0.49,
+        -0.73,
+        -1.0,
+        -1.6
+      ],
+      "alpha_moment_breakpoints_deg": [
+        -20,
+        0,
+        20
+      ],
+      "pitch_moment_coefficients": [
+        0.6,
+        0.0,
+        -0.6
+      ],
+      "beta_moment_breakpoints_deg": [
+        -20,
+        0,
+        20
+      ],
+      "yaw_moment_coefficients": [
+        -0.6,
+        0.0,
+        0.6
+      ],
+      "roll_moment_coefficients": [
+        0.0
+      ],
+      "source_files": [
+        "twostage_aero.dml"
+      ]
+    },
+    "mass_properties": {
+      "stage_1_ignition": {
+        "mass_kg": 314000.0,
+        "cg_from_nose_aft_m": 16.91879,
+        "inertia_body_kg_m2": [
+          353250.0,
+          33501637.473461,
+          33501637.473461
+        ],
+        "table_16_inertia_body_kg_m2": [
+          353250.0,
+          33501637.473461,
+          353250.0
+        ]
+      },
+      "stage_1_burnout": {
+        "mass_kg": 134000.0,
+        "cg_from_nose_aft_m": 9.421642,
+        "inertia_body_kg_m2": [
+          150750.0,
+          10886636.572139,
+          10886636.572139
+        ],
+        "table_16_inertia_body_kg_m2": [
+          150750.0,
+          10886636.572139,
+          150750.0
+        ]
+      },
+      "stage_2_ignition": {
+        "mass_kg": 99000.0,
+        "cg_from_nose_aft_m": 4.79798,
+        "inertia_body_kg_m2": [
+          111375.0,
+          941063.762626,
+          941063.762626
+        ],
+        "table_16_inertia_body_kg_m2": [
+          111375.0,
+          941063.762626,
+          111375.0
+        ]
+      },
+      "stage_2_burnout": {
+        "mass_kg": 19000.0,
+        "cg_from_nose_aft_m": 3.947368,
+        "inertia_body_kg_m2": [
+          21375.0,
+          212384.868421,
+          212384.868421
+        ],
+        "table_16_inertia_body_kg_m2": [
+          21375.0,
+          212384.868421,
+          21375.0
+        ]
+      },
+      "interpolation": "Linear in remaining stage propellant fraction, per twostage_inertia.dml",
+      "inertia_interpretation": "DAVE-ML computes Izz from Iyy; the printed NASA Table 16 lists Izz equal to Ixx. Both records are retained.",
+      "source_files": [
+        "twostage_inertia.dml"
+      ]
+    },
+    "propulsion_source_files": [
+      "twostage_prop.dml"
+    ]
+  },
+  "reference": {
+    "archive_url": "https://nescacademy.nasa.gov/src/flightsim/Datasets/Atmos_17_TwoStageRocketToOrbit.zip",
+    "archive_sha256": "d04448054c66efe6a31cdd5246b874245a60bb4bfdf39e9c5ed86d6176443cc4",
+    "source_csv_hashes": {
+      "sim_04": "8ff5549895bc6f4b27f4529cab050dacbc563a6a3508c18aedcca5ae1bdc23e5",
+      "sim_05": "f57b64733553a55d0b4369b210d047e8caa51cf0ea6cfa164a115051c2017633",
+      "sim_06": "b5dda095cd1849b2460c5b5f0f3b0f30d454adf2258749d345c11b18cd3ccabd"
+    },
+    "sample_csv": "reference_1s.csv",
+    "sample_interval_s": 1.0,
+    "sample_count_per_tool": 201,
+    "tools_anonymized_in_report": [
+      "sim_04",
+      "sim_05",
+      "sim_06"
+    ],
+    "meaning": "Three participating-tool solutions for the specified idealized model; a verification family, not empirical flight truth.",
+    "noncomparable_channels": [
+      "density_kg_m3",
+      "pressure_pa",
+      "temperature_k",
+      "mach",
+      "dynamic_pressure_pa"
+    ],
+    "noncomparable_channel_condition": "Do not compare these channels across tools above 86 km; NASA reports that one tool used a thermosphere model and excludes them."
+  },
+  "limitations": [
+    "The source describes an unpublished conceptual rocket model; its aero data are noted as V-2-at-Mach-3 inspired and other values have no further attribution.",
+    "NASA Case 17 is a numerical inter-tool verification case, not a flown vehicle or real-world launch event.",
+    "The model-package README and report disagree on initial velocity magnitude and direction: the report gives 0.32808399 ft/s (0.1 m/s) upward, while the README gives 0.1 ft/s along body X; the report's upward component matches the archived trajectories.",
+    "The scenario's initial body rates are zero relative to the rotating launch site; stored WrtEi rate histories include Earth rotation.",
+    "NASA Table 16 and twostage_inertia.dml disagree on yaw inertia; the simulator follows the DAVE-ML equation and retains the printed table values separately.",
+    "Atmospheric density, pressure, temperature, Mach and dynamic pressure are excluded from cross-tool comparison above 86 km.",
+    "The specified center of mass begins at sea level, so the conceptual vehicle geometry overlaps the ground.",
+    "The published source says a 0.001 s step is recommended and the case is sensitive to staging and rotational inertia assumptions.",
+    "NASA reports inter-tool differences including 21.6 ft position difference at 200 s for one 1000 Hz comparison and much larger deviation for an alternate inertia model.",
+    "The reference CSVs are anonymized simulation outputs; they are not treated as a single truth trajectory."
+  ]
+}

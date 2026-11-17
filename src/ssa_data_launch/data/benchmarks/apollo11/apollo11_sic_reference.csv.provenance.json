@@ -1,0 +1,23 @@
+{
+  "schema": "ssa_data_launch.apollo11_sic_profile.v1",
+  "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
+  "output_sha256": "d4d292a9957f2a75fb373649f5f393b5593c175496a594946b1234ed7cd8a621",
+  "record_count": 38,
+  "status": "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH",
+  "software_versions": {
+    "pdftoppm": "pdftoppm version 20.11.0",
+    "convert": "Version: ImageMagick 6.9.13-57 Q16 x86_64 19759 https://legacy.imagemagick.org",
+    "tesseract": "tesseract 4.1.1"
+  },
+  "validation": {
+    "sample_count": 38,
+    "time_span_s": [
+      0.0,
+      161.59
+    ],
+    "max_abs_position_norm_residual_m": 0.40936584305018187,
+    "position_norm_tolerance_m": 0.5,
+    "max_abs_velocity_norm_residual_m_s": 0.18533578964297703,
+    "velocity_norm_tolerance_m_s": 0.2
+  }
+}

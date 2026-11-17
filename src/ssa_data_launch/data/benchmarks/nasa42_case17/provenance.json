@@ -1,0 +1,156 @@
+{
+  "schema": "ssa_data_launch.nasa42_case_provenance.v1",
+  "case_id": "nasa_nesc_atmospheric_case_17_two_stage_rocket",
+  "payload": {
+    "config": "benchmarks/nasa42_case17/case.json",
+    "config_sha256": "ee27cd6455800fb99c6969b13eac4f3b2a30895330edb8d55f85130aa0f9a41c",
+    "reference_csv": "benchmarks/nasa42_case17/reference_1s.csv",
+    "reference_csv_sha256": "f56bcd14606cff489b0e59667d45d83ec3f4f91ecb6ce31c123e18b7c1328b7a",
+    "model_files": {
+      "twostage_aero.dml": {
+        "path": "benchmarks/nasa42_case17/models/twostage_aero.dml",
+        "sha256": "d496d32776ba116639eca6e084e1e113cb6f2f8eb088784593b61421d3ee01c2",
+        "source_sha256": "49df37f2ab8ad3b9c6f181bb3c32ad828304870371b3e058512c08e359579a27"
+      },
+      "twostage_inertia.dml": {
+        "path": "benchmarks/nasa42_case17/models/twostage_inertia.dml",
+        "sha256": "28db7b136853d67690d642f34d7ba5e3d1a7d454650b270ca02c62b6f4b0718c",
+        "source_sha256": "277707b8e1f26f99f6b2068c79a243bd3a450e325e2ef7dbc2f9a39e7b52570b"
+      },
+      "twostage_prop.dml": {
+        "path": "benchmarks/nasa42_case17/models/twostage_prop.dml",
+        "sha256": "c8b4b49492de6e55d519aca579a440ba3d40521a04498ef28d045b4825ad33d7",
+        "source_sha256": "297cb7b8950a1ba5185fca98b5966cb8ad14cf76f8d2d0af9b17e7b0785197ee"
+      }
+    }
+  },
+  "reference_csv_columns": [
+    "tool_id",
+    "time_s",
+    "position_eci_m_x",
+    "position_eci_m_y",
+    "position_eci_m_z",
+    "velocity_eci_m_s_x",
+    "velocity_eci_m_s_y",
+    "velocity_eci_m_s_z",
+    "altitude_msl_m",
+    "longitude_deg_east",
+    "latitude_deg",
+    "euler_ned_yaw_deg",
+    "euler_ned_pitch_deg",
+    "euler_ned_roll_deg",
+    "body_rate_wrt_ei_roll_rad_s",
+    "body_rate_wrt_ei_pitch_rad_s",
+    "body_rate_wrt_ei_yaw_rad_s",
+    "density_kg_m3",
+    "pressure_pa",
+    "temperature_k",
+    "aero_force_body_n_x",
+    "aero_force_body_n_y",
+    "aero_force_body_n_z",
+    "aero_moment_body_nm_x",
+    "aero_moment_body_nm_y",
+    "aero_moment_body_nm_z",
+    "mach",
+    "dynamic_pressure_pa"
+  ],
+  "reference_frame_and_datum": {
+    "position_eci_m": "Earth-centered inertial (EI) axes for each anonymized simulation. The archived t=0 states place +X radial-outward, +Y east, and +Z north at the equatorial launch site; the axes are treated as inertial thereafter. This orientation is inferred from the outputs and is not a published GCRF alignment.",
+    "velocity_eci_m_s": "Earth-centered inertial velocity in the corresponding EI axes; not Earth-fixed velocity.",
+    "eci_frame_orientation_epoch_s": 0.0,
+    "eci_frame_axes": "+X radial-outward, +Y east, +Z north at the equatorial launch site at t=0; inferred from archived outputs and not a published GCRF alignment.",
+    "altitude_msl_m": "Mean sea-level altitude",
+    "longitude_deg_east": "Geodetic longitude, east-positive",
+    "latitude_deg": "Geodetic latitude",
+    "euler_ned_*_deg": "Body attitude relative to local geodetic NED axes; yaw, pitch, roll order",
+    "body_rate_wrt_ei_*_rad_s": "Body components of angular rate relative to Earth inertial axes; roll, pitch, yaw order",
+    "scenario_initial_body_rate": "Zero relative to the rotating launch site, as specified by the model-package input description",
+    "reference_initial_body_rate": "A t=0 trajectory-output sample in the EI frame; not a scenario input"
+  },
+  "source": {
+    "citation": "NASA Engineering and Safety Center, NESC-RP-12-00770, Check-Cases for Verification of 6-Degree-of-Freedom Flight Vehicle Simulations, Volume II: Appendices, Appendix B.1.6 and C.1.20",
+    "url": "https://ntrs.nasa.gov/citations/20150001264",
+    "report_pdf_sha256": "2786f37fa02dba67e776de294038f7d8734b3de2cdd14d70b70a0db4b52f41f0",
+    "models_page": "NESC Academy 2015 Flight Simulation Checkcases",
+    "models_url": "https://nescacademy.nasa.gov/flightsim/2015",
+    "models_archive_url": "https://nescacademy.nasa.gov/src/flightsim/Models/Atmospheric_models.zip",
+    "models_archive_sha256": "10e2dc267856ef37eaedbcdd16eb49a8c44b39301054de0fa78292c1c4aba3bc",
+    "nested_model_archive_sha256": "0be22896aea43bde1cc726c53a91ff890a4cf1483094b10d132295d5c37f76cb"
+  },
+  "extraction": {
+    "reference_sample_rule": "For each anonymized simulation CSV, retain source samples at integer seconds 0 through 200 without interpolation; convert source imperial units to SI with stated exact conversion constants.",
+    "model_normalization": "Verify original DAVE-ML SHA-256 values, then strip trailing spaces/tabs and normalize line endings to LF; retain original and packaged hashes separately.",
+    "source_sample_count": {
+      "sim_04": 20001,
+      "sim_05": 20001,
+      "sim_06": 2001
+    },
+    "packaged_sample_count": {
+      "sim_04": 201,
+      "sim_05": 201,
+      "sim_06": 201
+    }
+  },
+  "limitations": [
+    "The source describes an unpublished conceptual rocket model; its aero data are noted as V-2-at-Mach-3 inspired and other values have no further attribution.",
+    "NASA Case 17 is a numerical inter-tool verification case, not a flown vehicle or real-world launch event.",
+    "The model-package README and report disagree on initial velocity magnitude and direction: the report gives 0.32808399 ft/s (0.1 m/s) upward, while the README gives 0.1 ft/s along body X; the report's upward component matches the archived trajectories.",
+    "The scenario's initial body rates are zero relative to the rotating launch site; stored WrtEi rate histories include Earth rotation.",
+    "NASA Table 16 and twostage_inertia.dml disagree on yaw inertia; the simulator follows the DAVE-ML equation and retains the printed table values separately.",
+    "Atmospheric density, pressure, temperature, Mach and dynamic pressure are excluded from cross-tool comparison above 86 km.",
+    "The specified center of mass begins at sea level, so the conceptual vehicle geometry overlaps the ground.",
+    "The published source says a 0.001 s step is recommended and the case is sensitive to staging and rotational inertia assumptions.",
+    "NASA reports inter-tool differences including 21.6 ft position difference at 200 s for one 1000 Hz comparison and much larger deviation for an alternate inertia model.",
+    "The reference CSVs are anonymized simulation outputs; they are not treated as a single truth trajectory."
+  ],
+  "source_discrepancies": [
+    {
+      "topic": "initial_velocity",
+      "report_value": "0.32808399 ft/s upward relative to the launch site (0.1 m/s)",
+      "model_package_readme_value": "0.1 ft/s along body X",
+      "selected_basis": "Volume II, Appendices, pp. 34 and 68; the selected upward 0.1 m/s component is corroborated by the three trajectory CSVs"
+    },
+    {
+      "topic": "initial_body_rate_frame",
+      "scenario_value": "zero relative to the rotating launch site",
+      "trajectory_output_value": "bodyAngularRateWrtEi includes the Earth-rate transformation",
+      "selected_basis": "Volume II, Appendices, p. 68 for initial conditions and p. 56 for output-frame definitions"
+    },
+    {
+      "topic": "thermosphere_outputs",
+      "detail": "SIM 6 retains nonzero atmospheric fields above 86 km; NASA excludes these channels from Case 17 comparison",
+      "selected_basis": "Volume II, Appendices, p. 595"
+    },
+    {
+      "topic": "initial_vehicle_geometry",
+      "detail": "The vehicle center of mass starts at sea level, placing the lower vehicle below the surface",
+      "selected_basis": "Volume II, Appendices, p. 34"
+    },
+    {
+      "topic": "yaw_inertia",
+      "report_value": "Table 16 lists Izz equal to Ixx",
+      "model_value": "twostage_inertia.dml computes Izz equal to Iyy",
+      "selected_basis": "The simulator follows the explicit DAVE-ML output equation; both values are retained"
+    },
+    {
+      "topic": "terminal_perigee_claim",
+      "report_value": "Greater than 125 km for the specified rotating Earth",
+      "archived_history_check": "All three terminal 200 s ECI vectors have below-surface two-body perigees under the recorded Earth constants",
+      "resolution": "Unresolved; the report's perigee frame, epoch, or gravity convention is not identified by the archived output CSVs."
+    }
+  ],
+  "derived_reference_audits": {
+    "terminal_two_body_conic": {
+      "epoch_s": 200.0,
+      "central_mu_m3_s2": 398600441800000.0,
+      "reference_radius_m": 6378137.0,
+      "perigee_altitude_m": {
+        "sim_04": -1214602.6764629623,
+        "sim_05": -1214433.695005591,
+        "sim_06": -670744.8646398736
+      },
+      "status": "SOURCE_DISCREPANCY",
+      "interpretation": "All archived terminal ECI vectors produce below-surface osculating two-body perigees under these constants, contrary to the report's greater-than-125-km statement. The source's perigee frame/time/gravity convention is unresolved."
+    }
+  }
+}

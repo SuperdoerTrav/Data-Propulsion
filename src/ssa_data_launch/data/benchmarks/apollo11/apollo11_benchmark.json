@@ -1,0 +1,340 @@
+{
+  "schema": "ssa_data_launch.launch_benchmark.v1",
+  "case_id": "apollo11_as506_parking_orbit_insertion",
+  "title": "Apollo 11 AS-506 launch and first parking-orbit insertion",
+  "classification": "REAL_TIME_OPERATIONAL_GUIDANCE_REFERENCE",
+  "source": {
+    "citation": "NASA CR-61291, AS-506 \"G\" Manned Lunar Landing Mission Post-Launch Operational Trajectory for July 16, 1969, Northrop Corporation, August 1969",
+    "url": "https://ntrs.nasa.gov/citations/19690026499",
+    "report_number": "NASA CR-61291",
+    "pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
+    "tables": {
+      "critical_event_sequence": {
+        "number": "2.1",
+        "pdf_page_range": [8, 12]
+      },
+      "trajectory_data": {
+        "number": "2.2",
+        "pdf_page_range": [13, 55]
+      },
+      "trajectory_summary": {
+        "number": "2.4",
+        "printed_pages": [116, 117],
+        "pdf_pages": [122, 123]
+      }
+    },
+    "comparison_sources": [
+      {
+        "citation": "Apollo 11 Mission Report, NASA-TM-X-62633 / MSC-00171, NTRS 19700008096",
+        "url": "https://ntrs.nasa.gov/citations/19700008096",
+        "pdf_sha256": "3314d99654ebb2ac3e3ef0ab70a84be9519a5f071cf1362118b2b20a6f161dea",
+        "reported_value": {
+          "metric": "maximum_dynamic_pressure",
+          "value": 735.0,
+          "unit": "lb/ft^2",
+          "converted_value_pa": 35191.990351
+        },
+        "note": "The report states 735 lb/ft^2 during launch; its value differs from NASA CR-61291 Table 2.4. Preserve both source values."
+      },
+      {
+        "citation": "Apollo 11 Mission Report, NASA SP-238, NASA Manned Space Flight Center, NTRS 19710015566",
+        "url": "https://ntrs.nasa.gov/citations/19710015566",
+        "pdf_sha256": "8b7192503c5b74dc1bc9686b6bd84560f6bbbf14fa851449ddd8ddaad6137d5d",
+        "printed_page": 71,
+        "reported_value": {
+          "metric": "maximum_dynamic_pressure",
+          "value": 735.0,
+          "unit": "lb/ft^2",
+          "converted_value_pa": 35191.990351
+        },
+        "note": "This separately numbered Apollo 11 postflight report also states 735 lb/ft^2 in its launch-phase summary; it is not the MSC-00171 report pinned above."
+      },
+      {
+        "citation": "Technical Information Summary: Apollo 11 /AS-506/, Apollo Saturn 5 Space Vehicle, NASA-TM-X-62812, NTRS 19700011707",
+        "url": "https://ntrs.nasa.gov/citations/19700011707",
+        "pdf_sha256": "3df6731e9cae9e22f291f69c30e336a5429711de2e1c674b8d38048ad00653b6",
+        "pdf_page": 39,
+        "vehicle_mass_data": {
+          "classification": "APPROXIMATE AS-506 MASS SNAPSHOTS",
+          "unit": "lb",
+          "snapshots": [
+            {"event": "s_ic_ignition", "value": 6484300},
+            {"event": "liftoff", "value": 6398500},
+            {"event": "s_ic_outboard_engine_cutoff", "value": 1826900},
+            {"event": "s_ii_ignition", "value": 1453800},
+            {"event": "s_ii_engine_cutoff", "value": 469700},
+            {"event": "s_ivb_first_ignition", "value": 367000},
+            {"event": "s_ivb_first_engine_cutoff", "value": 297500},
+            {"event": "s_ivb_restart", "value": 294600},
+            {"event": "s_ivb_second_engine_cutoff", "value": 133600},
+            {"event": "s_ivb_csm_separation", "value": 130900},
+            {"event": "translunar_injection", "value": 100800}
+          ]
+        },
+        "approximate_propellant_consumption": [
+          {"stage": "S-IC", "value_lb": 3679300, "duration_s": 161},
+          {"stage": "S-II", "value_lb": 971450, "duration_s": 389},
+          {"stage": "S-IVB", "value_lb": 223900, "duration_s": 461,
+           "note": "Combined first and second burns"}
+        ],
+        "note": "Approximate whole-vehicle weight history and total stage propellant consumption; not stage dry/usable load properties, CG/inertia, engine operating maps, or flight-qualified inputs."
+      }
+    ],
+    "guidance_reference_release_utc": "1969-07-16T13:31:43.02",
+    "first_motion_utc": "1969-07-16T13:31:59.6",
+    "report_statement": "The report contains the real-time operational trajectory using the actual Greenwich Mean Time Guidance Reference Release supplied by the Manned Spacecraft Center."
+  },
+  "launch_site": {
+    "name": "Launch Complex 39A, Kennedy Space Center",
+    "latitude_deg_north": 28.608422,
+    "longitude_deg_east": 279.395867,
+    "longitude_deg_west": -80.604133,
+    "azimuth_deg": 72.06
+  },
+  "elapsed_time_origin": "first motion",
+  "events": [
+    {
+      "id": "first_motion",
+      "time_s": 0.0,
+      "source_table": "2.1"
+    },
+    {
+      "id": "pitch_roll_initiation",
+      "time_s": 13.5,
+      "source_table": "2.4"
+    },
+    {
+      "id": "maximum_dynamic_pressure",
+      "time_s": 81.0,
+      "source_table": "2.4"
+    },
+    {
+      "id": "s_ic_center_engine_cutoff",
+      "time_s": 135.0,
+      "source_table": "2.4"
+    },
+    {
+      "id": "s_ic_outboard_engine_cutoff",
+      "time_s": 160.819,
+      "source_table": "2.4"
+    },
+    {
+      "id": "s_ii_center_engine_cutoff_table_2_1",
+      "time_s": 459.8,
+      "source_table": "2.1"
+    },
+    {
+      "id": "s_ii_center_engine_cutoff_table_2_4",
+      "time_s": 462.0,
+      "source_table": "2.4"
+    },
+    {
+      "id": "s_ii_engine_cutoff",
+      "time_s": 551.384,
+      "source_table": "2.4"
+    },
+    {
+      "id": "s_ivb_first_burn_90_percent_thrust",
+      "time_s": 557.884,
+      "source_table": "2.4"
+    },
+    {
+      "id": "s_ivb_guidance_cutoff_signal_1",
+      "time_s": 699.22793,
+      "source_table": "2.4"
+    },
+    {
+      "id": "parking_orbit_insertion",
+      "time_s": 709.23,
+      "source_table": "2.2"
+    }
+  ],
+  "maximum_dynamic_pressure": {
+    "time_s": 81.0,
+    "value_pa": 34725.243,
+    "source_table": "2.4"
+  },
+  "table_2_2_launch_state": {
+    "time_s": 0.0,
+    "geocentric_radius_m": 6373353.56,
+    "inertial_speed_m_s": 408.64,
+    "latitude_deg": 28.6084,
+    "longitude_deg_east": 279.4,
+    "position_m": [6373324.5, 19255.8, 1174.6],
+    "velocity_m_s": [-0.451, 125.641, 388.843],
+    "source_table": "2.2",
+    "source_pdf_page": 18
+  },
+  "table_2_2_insertion_state": {
+    "time_s": 709.23,
+    "frame": "space-fixed Earth-centered plumbline system",
+    "position_m": [5855435.3, 92621.0, 2963498.0],
+    "velocity_m_s": [-3520.094, 75.761, 6952.383],
+    "latitude_deg": 32.6831,
+    "longitude_deg_east": 307.33,
+    "source_table": "2.2",
+    "source_pdf_page": 54
+  },
+  "table_2_2_frame_checkpoints": [
+    {
+      "time_s": 625.0,
+      "position_m": [6115693.6, 85890.1, 2380668.4],
+      "latitude_deg": 32.3995,
+      "longitude_deg_east": 301.09,
+      "source_table": "2.2",
+      "source_pdf_pages": [50, 54]
+    },
+    {
+      "time_s": 630.0,
+      "position_m": [6102333.6, 86307.8, 2414840.8],
+      "latitude_deg": 32.425,
+      "longitude_deg_east": 301.44,
+      "source_table": "2.2",
+      "source_pdf_pages": [50, 54]
+    },
+    {
+      "time_s": 640.0,
+      "position_m": [6074835.6, 87136.6, 2483362.3],
+      "latitude_deg": 32.473,
+      "longitude_deg_east": 302.16,
+      "source_table": "2.2",
+      "source_pdf_pages": [50, 54]
+    },
+    {
+      "time_s": 699.22793,
+      "position_m": [5890222.3, 91857.6, 2893767.6],
+      "latitude_deg": 32.6669,
+      "longitude_deg_east": 306.56,
+      "source_table": "2.2",
+      "source_pdf_pages": [50, 54]
+    }
+  ],
+  "table_2_2_mass_ledger": [
+    {
+      "event": "first_motion",
+      "time_s": 0.0,
+      "event_side": "reported",
+      "total_vehicle_mass_kg": 2902326.66,
+      "source_pdf_page": 13
+    },
+    {
+      "event": "s_ic_center_engine_cutoff",
+      "time_s": 135.0,
+      "event_side": "reported",
+      "total_vehicle_mass_kg": 1105109.03,
+      "source_pdf_page": 13
+    },
+    {
+      "event": "s_ic_outboard_engine_cutoff",
+      "time_s": 160.82,
+      "event_side": "reported",
+      "total_vehicle_mass_kg": 826691.91,
+      "source_pdf_page": 13
+    },
+    {
+      "event": "s_ic_s_ii_separation",
+      "time_s": 161.59,
+      "event_side": "pre_reset",
+      "total_vehicle_mass_kg": 824990.88,
+      "source_pdf_page": 13
+    },
+    {
+      "event": "s_ic_s_ii_separation",
+      "time_s": 161.59,
+      "event_side": "post_reset",
+      "total_vehicle_mass_kg": 659530.11,
+      "source_pdf_page": 25
+    },
+    {
+      "event": "s_ii_engine_cutoff",
+      "time_s": 551.384,
+      "event_side": "reported",
+      "total_vehicle_mass_kg": 212043.95,
+      "source_pdf_page": 26
+    },
+    {
+      "event": "s_ivb_ullage_ignition",
+      "time_s": 552.08,
+      "event_side": "reported",
+      "total_vehicle_mass_kg": 212963.27,
+      "source_pdf_page": 26
+    },
+    {
+      "event": "s_ii_s_ivb_separation",
+      "time_s": 552.26,
+      "event_side": "pre_reset",
+      "total_vehicle_mass_kg": 212943.09,
+      "source_pdf_page": 26
+    },
+    {
+      "event": "s_ii_s_ivb_separation",
+      "time_s": 552.26,
+      "event_side": "post_reset",
+      "total_vehicle_mass_kg": 166492.60,
+      "source_pdf_page": 49
+    },
+    {
+      "event": "parking_orbit_insertion",
+      "time_s": 709.23,
+      "event_side": "reported",
+      "total_vehicle_mass_kg": 135740.66,
+      "source_pdf_page": 49
+    }
+  ],
+  "parking_orbit_insertion": {
+    "time_s": 709.23,
+    "geocentric_radius_m": 6563308.7,
+    "inertial_speed_m_s": 7793.1014,
+    "inertial_path_angle_deg": 90.001449,
+    "inclination_deg": 32.531447,
+    "descending_node_deg": 123.10042,
+    "eccentricity": 0.0010449,
+    "orbital_period_s": 5284.3769,
+    "source_table": "2.4 for state/orbit summary values; 2.2 for insertion epoch"
+  },
+  "source_discrepancies": [
+    {
+      "event": "s_ii_center_engine_cutoff",
+      "table_2_1_time_s": 459.8,
+      "table_2_4_time_s": 462.0,
+      "resolution": "Unresolved; retain both source values and do not apply one as a strict event-time acceptance target."
+    },
+    {
+      "event": "parking_orbit_insertion_osculating_elements",
+      "source_table_2_2": "position/velocity state at 709.23 s",
+      "source_table_2_4": "eccentricity and orbital period",
+      "resolution": "Unresolved; compare the Table 2.2 state against Table 2.4 at runtime and report the residuals."
+    },
+    {
+      "event": "s_ii_cutoff_to_s_ivb_ullage_mass",
+      "mass_at_s_ii_cutoff_kg": 212043.95,
+      "mass_at_s_ivb_ullage_ignition_kg": 212963.27,
+      "elapsed_time_s": 0.696,
+      "reported_mass_increase_kg": 919.32,
+      "resolution": "Unresolved table inconsistency; neither value is adjusted or used as a mass-conservation acceptance target."
+    },
+    {
+      "event": "maximum_dynamic_pressure",
+      "source_a": {
+        "report": "NASA CR-61291 Table 2.4",
+        "value_pa": 34725.243
+      },
+      "source_b": {
+        "report": "Apollo 11 Mission Report, NTRS 19700008096",
+        "value_lb_ft2": 735.0,
+        "value_pa": 35191.990351
+      },
+      "resolution": "Unresolved source discrepancy; do not use either value as unqualified flight truth."
+    }
+  ],
+  "limitations": [
+    "The operational guidance trajectory is not raw sensor telemetry or an independent post-flight best-estimate trajectory.",
+    "NASA CR-61291 Tables 2.1 and 2.4 report different S-II center-engine-cutoff times; the discrepancy remains unresolved.",
+    "NASA CR-61291 Table 2.4 and the Apollo 11 Mission Report differ in maximum dynamic pressure (34725.243 Pa versus 735 lb/ft^2, or 35191.990351 Pa); retain both source values.",
+    "Table 2.2 reports total vehicle mass increasing by 919.32 kg from S-II cutoff to S-IVB ullage ignition; this interval is preserved but not used as a mass-conservation reference.",
+    "The Table 2.2 insertion state and Table 2.4 eccentricity/period do not close as one osculating two-body orbit under SSATK's Earth gravitational parameter.",
+    "Table 2.4's printed twice-specific-energy sign conflicts with its bound-orbit eccentricity and period; specific energy is excluded.",
+    "The event summary supports benchmark closure only; it does not provide the full trajectory samples or engineering inputs for predictive ascent simulation.",
+    "A benchmark pass against this report does not establish flight qualification or independent measured-flight accuracy."
+  ]
+}
