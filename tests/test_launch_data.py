@@ -225,8 +225,36 @@ def test_apollo11_sic_reference_is_hash_pinned_and_source_closed():
     assert provenance["status"] == (
         "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH"
     )
+    assert [
+        (row["time_s"], row["latitude_deg_north"], row["longitude_deg_west"])
+        for row in provenance["validation"]["geodetic_frame_checkpoints"]
+    ] == [
+        (0.0, 28.6084, -80.60),
+        (40.0, 28.6083, -80.60),
+        (80.0, 28.6208, -80.56),
+        (100.0, 28.6436, -80.48),
+        (135.0, 28.7363, -80.15),
+        (161.59, 28.8658, -79.69),
+    ]
     assert len(rows) == provenance["record_count"] == 38
     assert all(row["phase"] == "s_ic" for row in rows)
+    assert set(rows[0]) == {
+        "time_from_first_motion_s",
+        "event",
+        "phase",
+        "geocentric_radius_m",
+        "inertial_speed_m_s",
+        "space_fixed_x_m",
+        "space_fixed_y_m",
+        "space_fixed_z_m",
+        "space_fixed_vx_m_s",
+        "space_fixed_vy_m_s",
+        "space_fixed_vz_m_s",
+        "event_side",
+        "event_source",
+        "transcription_corrections",
+        "source_pages",
+    }
     assert [row["time_from_first_motion_s"] for row in rows] == sorted(
         row["time_from_first_motion_s"] for row in rows
     )
