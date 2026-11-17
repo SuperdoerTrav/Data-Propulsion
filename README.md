@@ -19,9 +19,24 @@ The Apollo 11 package records selected events, launch and insertion states,
 mass checkpoints, and source discrepancies from NASA reports. The reports
 themselves are not redistributed, and the operational guidance record is not
 independent flight truth.
+
+`benchmarks/apollo11/apollo11_sic_reference.csv` adds a source-closed
+space-fixed state history from first motion through S-IC/S-II separation:
+38 records, including 5 s samples and event epochs. Position-vector norm
+residuals are at most 0.410 m and velocity-vector norm residuals are at most
+0.186 m/s against scalar values in the report. This is an operational
+trajectory reference, not raw telemetry or independent flight truth.
+Recreate it with the pinned-report extractor:
+
+```bash
+python3 scripts/extract_apollo11_profile.py \
+  --phase s_ic --output /tmp/apollo11_sic_reference.csv
+```
+
 The experimental extractor for the report's full 5-second trajectory table is
 retained under `scripts/`, but it does not currently pass source-closure
-checks; no full-profile trajectory is included.
+checks because it misses the S-II center-engine-cutoff row. No full-profile
+trajectory is included.
 
 The NASA NESC Case 17 package contains the published idealized two-stage
 verification model and anonymized reference histories. It is not a flown

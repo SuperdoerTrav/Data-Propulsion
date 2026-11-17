@@ -1,4 +1,4 @@
-"""Experimental OCR of AS-506 tables; output is not an approved benchmark."""
+"""OCR the AS-506 tables; only the validated S-IC segment is source-closed."""
 
 from __future__ import annotations
 
@@ -472,6 +472,26 @@ _TABLE_FIELD_LIMITS = {
 _VISUALLY_VERIFIED_TRANSCRIPTIONS = {
     # Source digits were read directly from the 3000-pixel PDF-page renders.
     # The page number is the PDF page and each row is kept in the source phase.
+    ("s_ic", 70.0, 5): (655.07, 13),
+    ("s_ic", 135.0, 5): (1989.82, 13),
+    ("s_ic", 125.0, 25): (6409716.4, 18),
+    ("s_ic", 130.0, 26): (35374.2, 18),
+    ("s_ic", 135.0, 25): (6416974.3, 18),
+    ("s_ic", 135.0, 26): (35963.1, 18),
+    ("s_ic", 135.0, 27): (100672.6, 18),
+    ("s_ic", 140.0, 26): (36549.3, 18),
+    ("s_ic", 145.0, 26): (37133.3, 18),
+    ("s_ic", 150.0, 26): (37715.1, 18),
+    ("s_ic", 155.0, 26): (38294.6, 18),
+    ("s_ic", 160.0, 26): (38871.6, 18),
+    ("s_ic", 160.82, 26): (38965.9, 18),
+    ("s_ic", 161.59, 25): (6438562.7, 18),
+    ("s_ic", 161.59, 26): (39054.5, 18),
+    ("s_ic", 161.59, 27): (159600.6, 18),
+    ("s_ic", 161.59, 28): (858.782, 18),
+    ("s_ic", 161.59, 29): (115.035, 18),
+    ("s_ic", 161.59, 30): (2626.743, 18),
+    ("s_ic", 150.0, 8): (6430271.06, 14),
     ("s_ic", 160.82, 3): (826691.91, 19),
     ("s_ii", 161.59, 2): (411783.57, 19),
     ("s_ii", 161.59, 3): (659530.11, 19),
@@ -490,6 +510,32 @@ _VISUALLY_VERIFIED_TRANSCRIPTIONS = {
     ("s_ivb", 557.88, 6): (89.43, 43),
     ("s_ivb", 557.88, 7): (4.941, 43),
 }
+
+
+def _apply_visually_verified_transcriptions(merged, phases=None):
+    for key, (value, page) in _VISUALLY_VERIFIED_TRANSCRIPTIONS.items():
+        phase, time_value, column = key
+        if phases is not None and phase not in phases:
+            continue
+        row = merged.get((phase, time_value))
+        if row is None:
+            raise ValueError(
+                f"source PDF is missing visually checked {phase} row at {time_value} s"
+            )
+        row[str(column)] = value
+        row.setdefault("source_pages", set()).add(page)
+        superseded_notes = (
+            f"space-fixed component {column} changed from",
+            f"column {column} changed from",
+        )
+        notes = row.setdefault("transcription_corrections", [])
+        notes[:] = [
+            note for note in notes
+            if not any(note.startswith(prefix) for prefix in superseded_notes)
+        ]
+        notes.append(
+            f"PDF p.{page}, table 2.2 column {column}: manually verified"
+        )
 
 
 def _correct_ocr_columns(merged):
@@ -625,11 +671,13 @@ def _correct_source_vector_ocr(merged):
                 row[str(offset+index)] = value
 
 
-def _merge_rows(pdf):
+def _merge_rows(pdf, *, phases=None):
     merged = {}
     with tempfile.TemporaryDirectory(prefix="ssa-apollo11-") as temporary:
         directory = Path(temporary)
         for phase, tables in PHASE_TABLE_PAGES:
+            if phases is not None and phase not in phases:
+                continue
             for role, pages in tables.items():
                 for page in pages:
                     for row in _extract_page(pdf, page, role, phase, directory):
@@ -646,14 +694,7 @@ def _merge_rows(pdf):
                         current.setdefault("source_pages", set()).add(page)
     _correct_ocr_columns(merged)
     _correct_source_vector_ocr(merged)
-    for (phase, time_value, column), (value, page) in _VISUALLY_VERIFIED_TRANSCRIPTIONS.items():
-        row = merged.get((phase, time_value))
-        if row is None:
-            raise ValueError(f"source PDF is missing visually checked {phase} row at {time_value} s")
-        row[str(column)] = value
-        row.setdefault("transcription_corrections", []).append(
-            f"PDF p.{page}, table 2.2 column {column}: manually verified"
-        )
+    _apply_visually_verified_transcriptions(merged, phases=phases)
     output = []
     for event, event_time in TABLE_EVENT_TIMES.items():
         candidates = [(phase, time_value) for phase, time_value in merged
@@ -689,6 +730,80 @@ def _merge_rows(pdf):
             row["dynamic_pressure_pa"] = 34725.243
         output.append(row)
     return output
+
+
+def _validate_sic(rows):
+    expected_times = {0.0, 0.4, 65.75, 81.0, 160.82, 161.59}
+    expected_times.update(float(value) for value in range(5, 161, 5))
+    actual_times = {row["time_from_first_motion_s"] for row in rows}
+    if actual_times != expected_times or len(rows) != len(expected_times):
+        missing = sorted(expected_times-actual_times)
+        extra = sorted(actual_times-expected_times)
+        raise ValueError(
+            f"S-IC profile epochs differ from the 5 s/event grid; "
+            f"missing={missing}, extra={extra}"
+        )
+
+    expected_events = {
+        "TIME BASE 1": 0.4,
+        "MACH 1": 65.75,
+        "MAX Q": 81.0,
+        "S-IC CECO": 135.0,
+        "S-IC OECO": 160.82,
+        "S-IC/S-II SEP": 161.59,
+    }
+    by_event = {row["event"]: row for row in rows if row["event"]}
+    for event, expected_time in expected_events.items():
+        if event not in by_event:
+            raise ValueError(f"S-IC profile is missing summary event {event!r}")
+        actual_time = by_event[event]["time_from_first_motion_s"]
+        if abs(actual_time-expected_time) > 0.02:
+            raise ValueError(
+                f"{event} time {actual_time} s disagrees with NASA Table 2.2"
+            )
+
+    position_residuals = []
+    speed_residuals = []
+    required = (
+        "geocentric_radius_m", "inertial_speed_m_s",
+        "space_fixed_x_m", "space_fixed_y_m", "space_fixed_z_m",
+        "space_fixed_vx_m_s", "space_fixed_vy_m_s", "space_fixed_vz_m_s",
+    )
+    for row in rows:
+        missing = [name for name in required if row.get(name, "") == ""]
+        if missing:
+            raise ValueError(
+                f"S-IC {row['time_from_first_motion_s']} s is missing {missing}"
+            )
+        position = [float(row[name]) for name in (
+            "space_fixed_x_m", "space_fixed_y_m", "space_fixed_z_m",
+        )]
+        velocity = [float(row[name]) for name in (
+            "space_fixed_vx_m_s", "space_fixed_vy_m_s", "space_fixed_vz_m_s",
+        )]
+        position_residuals.append(
+            abs(hypot(*position)-float(row["geocentric_radius_m"]))
+        )
+        speed_residuals.append(
+            abs(hypot(*velocity)-float(row["inertial_speed_m_s"]))
+        )
+
+    max_position_residual = max(position_residuals)
+    max_speed_residual = max(speed_residuals)
+    if max_position_residual > 0.5 or max_speed_residual > 0.2:
+        raise ValueError(
+            "S-IC source-vector closure fails: "
+            f"max radius residual {max_position_residual:.6f} m, "
+            f"max speed residual {max_speed_residual:.6f} m/s"
+        )
+    return {
+        "sample_count": len(rows),
+        "time_span_s": [min(actual_times), max(actual_times)],
+        "max_abs_position_norm_residual_m": max_position_residual,
+        "position_norm_tolerance_m": 0.5,
+        "max_abs_velocity_norm_residual_m_s": max_speed_residual,
+        "velocity_norm_tolerance_m_s": 0.2,
+    }
 
 
 def _validate(rows):
@@ -753,14 +868,26 @@ def extract(pdf):
     return rows
 
 
+def extract_sic(pdf):
+    """Extract the source-closed S-IC arc; this is operational data, not flight truth."""
+    pdf = Path(pdf)
+    if sha256(pdf.read_bytes()).hexdigest() != SOURCE_SHA256:
+        raise ValueError("input PDF does not match the pinned NASA CR-61291 source digest")
+    rows = _merge_rows(pdf, phases={"s_ic"})
+    _validate_sic(rows)
+    return rows
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pdf", type=Path, help="NASA CR-61291 PDF; downloaded when omitted")
     parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path(tempfile.gettempdir()) / "apollo11_trajectory_ocr_unverified.csv",
+        "--phase",
+        choices=("all", "s_ic"),
+        default="all",
+        help="extract the full experimental profile or the source-closed S-IC segment",
     )
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
     if not all(shutil.which(name) for name in ("pdftoppm", "convert", "tesseract")):
         parser.error("extractor requires Poppler pdftoppm, ImageMagick convert, and Tesseract")
@@ -773,17 +900,31 @@ def main(argv=None):
         _fetch_report(temporary)
         pdf = temporary
     try:
-        rows = extract(pdf)
+        if args.phase == "s_ic":
+            rows = extract_sic(pdf)
+            validation = _validate_sic(rows)
+        else:
+            rows = extract(pdf)
+            validation = None
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    with args.output.open("x", newline="", encoding="utf-8") as handle:
+    output = args.output
+    if output is None:
+        default_name = (
+            "apollo11_sic_operational_reference.csv"
+            if args.phase == "s_ic"
+            else "apollo11_trajectory_ocr_unverified.csv"
+        )
+        output = Path(tempfile.gettempdir()) / default_name
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("x", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle,
             fieldnames=(*FIELDS[:2], "phase", *FIELDS[2:],
-                        "event_side", "event_source", "source_pages",
-                        "transcription_corrections"),
+                        "event_side", "event_source", "transcription_corrections",
+                        "source_pages"),
+            lineterminator="\n",
         )
         writer.writeheader()
         writer.writerows(rows)
@@ -794,14 +935,24 @@ def main(argv=None):
         version_text = (completed.stdout or completed.stderr).splitlines()
         versions[name] = version_text[0] if version_text else "unknown"
     provenance = {
-        "schema": "ssa_data_launch.unverified_ocr.v1",
+        "schema": (
+            "ssa_data_launch.apollo11_sic_profile.v1"
+            if args.phase == "s_ic"
+            else "ssa_data_launch.unverified_ocr.v1"
+        ),
         "source_pdf_sha256": SOURCE_SHA256,
-        "output_sha256": sha256(args.output.read_bytes()).hexdigest(),
+        "output_sha256": sha256(output.read_bytes()).hexdigest(),
         "record_count": len(rows),
-        "status": "UNVERIFIED_OCR; NOT A BENCHMARK OR FLIGHT-TRUTH DATASET",
+        "status": (
+            "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH"
+            if args.phase == "s_ic"
+            else "UNVERIFIED_OCR; NOT A BENCHMARK OR FLIGHT-TRUTH DATASET"
+        ),
         "software_versions": versions,
     }
-    sidecar = args.output.with_name(args.output.name+".provenance.json")
+    if validation is not None:
+        provenance["validation"] = validation
+    sidecar = output.with_name(output.name+".provenance.json")
     with sidecar.open("x", encoding="utf-8") as handle:
         handle.write(json.dumps(provenance, indent=2)+"\n")
 

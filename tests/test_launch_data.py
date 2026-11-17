@@ -8,12 +8,18 @@ import pytest
 
 from ssa_data_launch import (
     apollo11_benchmark,
+    apollo11_sic_reference_provenance,
     data_resource,
     nasa42_case17,
     nasa42_case17_provenance,
+    read_apollo11_sic_reference,
     read_nasa42_case17_reference,
 )
-from scripts.extract_apollo11_profile import _tsv_rows
+from scripts.extract_apollo11_profile import (
+    _VISUALLY_VERIFIED_TRANSCRIPTIONS,
+    _apply_visually_verified_transcriptions,
+    _tsv_rows,
+)
 from scripts.extract_nasa42_case17 import _normalize_model_payload
 
 
@@ -31,6 +37,50 @@ def test_tesseract_tsv_preserves_quotes_as_ocr_text():
         ["10.00", '"Q8'],
         ["15.00", "123.4"],
     ]
+
+
+def test_apollo_sic_visual_transcriptions_close_135s_and_separation_states():
+    row_135 = {
+        "8": 6417864.63,
+        "25": 641697443.0,
+        "26": 25963.1,
+        "27": 103672.6,
+    }
+    row_separation = {"8": 6440658.81, "5": 2765.96}
+    merged = {
+        (phase, time_s): {}
+        for phase, time_s, _column in _VISUALLY_VERIFIED_TRANSCRIPTIONS
+    }
+    merged[("s_ic", 135.0)] = row_135
+    merged[("s_ic", 161.59)] = row_separation
+    _apply_visually_verified_transcriptions(merged)
+
+    assert [row_135[str(column)] for column in (25, 26, 27)] == [
+        6416974.3, 35963.1, 100672.6,
+    ]
+    assert row_135["5"] == 1989.82
+    assert hypot(
+        row_135["25"], row_135["26"], row_135["27"]
+    ) - row_135["8"] == pytest.approx(
+        0.0837356, abs=1e-6,
+    )
+    assert [
+        row_separation[str(column)] for column in range(25, 31)
+    ] == [6438562.7, 39054.5, 159600.6, 858.782, 115.035, 2626.743]
+    assert hypot(
+        row_separation["25"], row_separation["26"], row_separation["27"]
+    ) - row_separation["8"] == pytest.approx(0.1040648, abs=1e-6)
+    assert hypot(
+        row_separation["28"], row_separation["29"], row_separation["30"]
+    ) - row_separation["5"] == pytest.approx(-0.0029572, abs=1e-6)
+    assert any(
+        "PDF p.18" in note for note in row_135["transcription_corrections"]
+    )
+    assert row_135["source_pages"] == {13, 18}
+    assert not any(
+        note.startswith("space-fixed component 27 changed from")
+        for note in row_135["transcription_corrections"]
+    )
 
 
 def test_dave_ml_packaging_normalizes_only_line_endings_and_trailing_space():
@@ -161,6 +211,61 @@ def test_apollo11_published_event_sequence_and_parking_orbit_values():
     discrepancies = benchmark["source_discrepancies"]
     assert len(discrepancies) == 4
     assert all(item["resolution"].startswith("Unresolved") for item in discrepancies)
+
+
+def test_apollo11_sic_reference_is_hash_pinned_and_source_closed():
+    provenance = apollo11_sic_reference_provenance()
+    resource = data_resource("benchmarks/apollo11/apollo11_sic_reference.csv")
+    rows = read_apollo11_sic_reference()
+
+    assert sha256(resource.read_bytes()).hexdigest() == provenance["output_sha256"]
+    assert provenance["source_pdf_sha256"] == (
+        "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3"
+    )
+    assert provenance["status"] == (
+        "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH"
+    )
+    assert len(rows) == provenance["record_count"] == 38
+    assert all(row["phase"] == "s_ic" for row in rows)
+    assert [row["time_from_first_motion_s"] for row in rows] == sorted(
+        row["time_from_first_motion_s"] for row in rows
+    )
+
+    events = {row["event"]: row["time_from_first_motion_s"] for row in rows if row["event"]}
+    assert events["S-IC CECO"] == 135.0
+    assert events["S-IC OECO"] == 160.82
+    assert events["S-IC/S-II SEP"] == 161.59
+
+    position_residuals = [
+        abs(hypot(
+            row["space_fixed_x_m"],
+            row["space_fixed_y_m"],
+            row["space_fixed_z_m"],
+        )-row["geocentric_radius_m"])
+        for row in rows
+    ]
+    speed_residuals = [
+        abs(hypot(
+            row["space_fixed_vx_m_s"],
+            row["space_fixed_vy_m_s"],
+            row["space_fixed_vz_m_s"],
+        )-row["inertial_speed_m_s"])
+        for row in rows
+    ]
+    validation = provenance["validation"]
+    assert max(position_residuals) == pytest.approx(
+        validation["max_abs_position_norm_residual_m"], abs=1e-9,
+    )
+    assert max(speed_residuals) == pytest.approx(
+        validation["max_abs_velocity_norm_residual_m_s"], abs=1e-9,
+    )
+    assert max(position_residuals) <= validation["position_norm_tolerance_m"]
+    assert max(speed_residuals) <= validation["velocity_norm_tolerance_m_s"]
+    row_135 = next(row for row in rows if row["time_from_first_motion_s"] == 135.0)
+    assert {"13", "14", "18"} <= set(row_135["source_pages"].split(";"))
+    separation = next(row for row in rows if row["event"] == "S-IC/S-II SEP")
+    assert separation["event_side"] == "pre_reset"
+    assert "18" in separation["source_pages"].split(";")
 
 
 def test_apollo11_launch_site_longitude_conventions_close():

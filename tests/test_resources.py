@@ -11,4 +11,7 @@ def test_launch_benchmark_data_is_packaged():
     assert launch_data_resource(
         "benchmarks/apollo11/apollo11_benchmark.json"
     ).is_file()
+    assert launch_data_resource(
+        "benchmarks/apollo11/apollo11_sic_reference.csv"
+    ).is_file()
     assert launch_data_resource("benchmarks/nasa42_case17/reference_1s.csv").is_file()

@@ -7,9 +7,11 @@ from importlib.resources import files
 __all__ = [
     "apollo11_benchmark",
     "apollo11_provenance",
+    "apollo11_sic_reference_provenance",
     "data_resource",
     "nasa42_case17",
     "nasa42_case17_provenance",
+    "read_apollo11_sic_reference",
     "read_nasa42_case17_reference",
 ]
 
@@ -37,6 +39,31 @@ def apollo11_benchmark():
     """Return the audited Apollo 11 event and parking-orbit summary."""
     resource = data_resource("benchmarks/apollo11/apollo11_benchmark.json")
     return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def apollo11_sic_reference_provenance():
+    """Return source and closure metadata for the 38-sample S-IC arc."""
+    resource = data_resource(
+        "benchmarks/apollo11/apollo11_sic_reference.csv.provenance.json"
+    )
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def read_apollo11_sic_reference():
+    """Read the source-closed Apollo 11 S-IC operational state history."""
+    resource = data_resource("benchmarks/apollo11/apollo11_sic_reference.csv")
+    text_columns = {
+        "phase", "event", "event_side", "event_source", "source_pages",
+        "transcription_corrections",
+    }
+    with resource.open("r", encoding="utf-8", newline="") as handle:
+        return [
+            {
+                key: value if key in text_columns or value == "" else float(value)
+                for key, value in row.items()
+            }
+            for row in csv.DictReader(handle)
+        ]
 
 
 def nasa42_case17():
