@@ -1,7 +1,7 @@
 {
   "schema": "ssa_data_launch.apollo11_sic_profile.v1",
   "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
-  "output_sha256": "d4d292a9957f2a75fb373649f5f393b5593c175496a594946b1234ed7cd8a621",
+  "output_sha256": "eb2385bef8bb6688c92ccf44a1a2febcb7f894d4191da7159391cec657e85e36",
   "record_count": 38,
   "status": "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH",
   "software_versions": {

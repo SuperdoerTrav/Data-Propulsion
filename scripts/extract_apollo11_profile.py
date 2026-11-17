@@ -90,6 +90,23 @@ PHASE_TIME_BOUNDS = {
     "s_ii": (161.59, 552.26),
     "s_ivb": (552.26, 709.23),
 }
+SIC_REFERENCE_FIELDS = (
+    "time_from_first_motion_s",
+    "event",
+    "phase",
+    "geocentric_radius_m",
+    "inertial_speed_m_s",
+    "space_fixed_x_m",
+    "space_fixed_y_m",
+    "space_fixed_z_m",
+    "space_fixed_vx_m_s",
+    "space_fixed_vy_m_s",
+    "space_fixed_vz_m_s",
+    "event_side",
+    "event_source",
+    "transcription_corrections",
+    "source_pages",
+)
 
 
 def _run(command):
@@ -903,9 +920,20 @@ def main(argv=None):
         if args.phase == "s_ic":
             rows = extract_sic(pdf)
             validation = _validate_sic(rows)
+            output_rows = [
+                {field: row[field] for field in SIC_REFERENCE_FIELDS}
+                for row in rows
+            ]
+            output_fields = SIC_REFERENCE_FIELDS
         else:
             rows = extract(pdf)
             validation = None
+            output_rows = rows
+            output_fields = (
+                *FIELDS[:2], "phase", *FIELDS[2:],
+                "event_side", "event_source", "transcription_corrections",
+                "source_pages",
+            )
     finally:
         if temporary is not None:
             temporary.unlink(missing_ok=True)
@@ -921,13 +949,11 @@ def main(argv=None):
     with output.open("x", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=(*FIELDS[:2], "phase", *FIELDS[2:],
-                        "event_side", "event_source", "transcription_corrections",
-                        "source_pages"),
+            fieldnames=output_fields,
             lineterminator="\n",
         )
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(output_rows)
     versions = {}
     for name, flag in (("pdftoppm", "-v"), ("convert", "--version"),
                        ("tesseract", "--version")):

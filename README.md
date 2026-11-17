@@ -22,10 +22,13 @@ independent flight truth.
 
 `benchmarks/apollo11/apollo11_sic_reference.csv` adds a source-closed
 space-fixed state history from first motion through S-IC/S-II separation:
-38 records, including 5 s samples and event epochs. Position-vector norm
-residuals are at most 0.410 m and velocity-vector norm residuals are at most
-0.186 m/s against scalar values in the report. This is an operational
-trajectory reference, not raw telemetry or independent flight truth.
+38 records with only the time/event fields, six state components, scalar
+geocentric radius/speed used for closure, and provenance columns. OCR-derived
+mass, aerodynamic, attitude, and other side channels are intentionally
+excluded. Position-vector norm residuals are at most 0.410 m and
+velocity-vector norm residuals are at most 0.186 m/s against scalar values in
+the report. This is an operational trajectory reference, not raw telemetry or
+independent flight truth.
 Recreate it with the pinned-report extractor:
 
 ```bash

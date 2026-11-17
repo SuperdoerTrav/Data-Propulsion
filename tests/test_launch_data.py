@@ -227,6 +227,23 @@ def test_apollo11_sic_reference_is_hash_pinned_and_source_closed():
     )
     assert len(rows) == provenance["record_count"] == 38
     assert all(row["phase"] == "s_ic" for row in rows)
+    assert set(rows[0]) == {
+        "time_from_first_motion_s",
+        "event",
+        "phase",
+        "geocentric_radius_m",
+        "inertial_speed_m_s",
+        "space_fixed_x_m",
+        "space_fixed_y_m",
+        "space_fixed_z_m",
+        "space_fixed_vx_m_s",
+        "space_fixed_vy_m_s",
+        "space_fixed_vz_m_s",
+        "event_side",
+        "event_source",
+        "transcription_corrections",
+        "source_pages",
+    }
     assert [row["time_from_first_motion_s"] for row in rows] == sorted(
         row["time_from_first_motion_s"] for row in rows
     )
