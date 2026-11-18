@@ -64,7 +64,7 @@ manually checked against the vehicle, geodetic, and space-fixed tables on PDF
 pages 25, 27, and 35. The provenance sidecar includes geodetic checkpoints
 every 5 s from 180 through 385 s, plus the 201.42 s event. It lists 7
 incomplete, 2 closure-failed, and 19 correction-withheld epochs. The samples
-form a 5 s sampled interval from 175 to 380 s but remain sparse outside it;
+form a 5 s sampled interval from 175 to 385 s but remain sparse outside it;
 they do not define a continuous trajectory or flight-validation arc. Recreate
 them with:
 
