@@ -69,6 +69,8 @@ them with:
 python3 scripts/extract_apollo11_profile.py \
   --phase s_ii_closed --output /tmp/apollo11_sii_source_closed_samples.csv
 ```
+The 200 s sample also has a manually transcribed Table 2.2 geodetic checkpoint
+in its provenance sidecar for an independent source-frame consistency check.
 
 The experimental extractor for the report's full 5-second trajectory table is
 retained under `scripts/`, but it does not currently pass source-closure

@@ -458,6 +458,14 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
         )
         for column in (5, 8, 25, 26, 27, 28, 29, 30)
     )
+    assert validation["geodetic_frame_checkpoints"] == [{
+        "time_s": 200.0,
+        "latitude_deg_north": 29.0992,
+        "longitude_deg_west": -78.83,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21,
+    }]
     assert times[-1] == 545.0
     assert max(right-left for left, right in zip(times, times[1:])) > 5.0
     assert all(
