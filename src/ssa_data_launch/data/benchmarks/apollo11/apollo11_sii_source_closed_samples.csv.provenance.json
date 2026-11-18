@@ -1,8 +1,8 @@
 {
   "schema": "ssa_data_launch.apollo11_sii_closed_samples.v1",
   "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
-  "output_sha256": "94321accfe4bf1599bec33714e652d3e7fc6a133c23d27d1889a72a6e2840c72",
-  "record_count": 70,
+  "output_sha256": "9118a246699af2ffad614804f458109ee1370967e16ab3b54c0c81f0fb3372fd",
+  "record_count": 84,
   "status": "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH",
   "software_versions": {
     "pdftoppm": "pdftoppm version 20.11.0",
@@ -11,179 +11,10 @@
   },
   "validation": {
     "candidate_record_count": 84,
-    "record_count": 70,
-    "incomplete_records": [
-      {
-        "time_s": 525.0,
-        "missing_fields": [
-          "inertial_speed_m_s"
-        ]
-      },
-      {
-        "time_s": 550.0,
-        "missing_fields": [
-          "inertial_speed_m_s"
-        ]
-      },
-      {
-        "time_s": 552.26,
-        "missing_fields": [
-          "inertial_speed_m_s"
-        ]
-      }
-    ],
+    "record_count": 84,
+    "incomplete_records": [],
     "closure_failed_records": [],
-    "review_withheld_records": [
-      {
-        "time_s": 495.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          },
-          {
-            "source_table_column": 30,
-            "field": "space_fixed_vz_m_s"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 500.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 505.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 510.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 515.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 520.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          },
-          {
-            "source_table_column": 30,
-            "field": "space_fixed_vz_m_s"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 530.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 535.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          },
-          {
-            "source_table_column": 27,
-            "field": "space_fixed_z_m"
-          },
-          {
-            "source_table_column": 30,
-            "field": "space_fixed_vz_m_s"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 540.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          },
-          {
-            "source_table_column": 30,
-            "field": "space_fixed_vz_m_s"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 551.384,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 552.08,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 8,
-            "field": "geocentric_radius_m"
-          },
-          {
-            "source_table_column": 25,
-            "field": "space_fixed_x_m"
-          },
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      }
-    ],
+    "review_withheld_records": [],
     "sample_times_s": [
       161.59,
       162.22,
@@ -254,7 +85,21 @@
       480.0,
       485.0,
       490.0,
-      545.0
+      495.0,
+      500.0,
+      505.0,
+      510.0,
+      515.0,
+      520.0,
+      525.0,
+      530.0,
+      535.0,
+      540.0,
+      545.0,
+      550.0,
+      551.384,
+      552.08,
+      552.26
     ],
     "max_abs_position_norm_residual_m": 0.1800855901092291,
     "position_norm_tolerance_m": 0.5,
@@ -761,6 +606,126 @@
         "time_s": 490.0,
         "latitude_deg_north": 31.396,
         "longitude_deg_west": -67.78,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 495.0,
+        "latitude_deg_north": 31.4403,
+        "longitude_deg_west": -67.48,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 500.0,
+        "latitude_deg_north": 31.4843,
+        "longitude_deg_west": -67.19,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 505.0,
+        "latitude_deg_north": 31.528,
+        "longitude_deg_west": -66.89,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 510.0,
+        "latitude_deg_north": 31.5714,
+        "longitude_deg_west": -66.59,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 515.0,
+        "latitude_deg_north": 31.6144,
+        "longitude_deg_west": -66.29,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 520.0,
+        "latitude_deg_north": 31.657,
+        "longitude_deg_west": -65.98,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 525.0,
+        "latitude_deg_north": 31.6992,
+        "longitude_deg_west": -65.67,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 530.0,
+        "latitude_deg_north": 31.741,
+        "longitude_deg_west": -65.35,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 535.0,
+        "latitude_deg_north": 31.7824,
+        "longitude_deg_west": -65.04,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 540.0,
+        "latitude_deg_north": 31.8233,
+        "longitude_deg_west": -64.71,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 545.0,
+        "latitude_deg_north": 31.8637,
+        "longitude_deg_west": -64.39,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 550.0,
+        "latitude_deg_north": 31.9036,
+        "longitude_deg_west": -64.06,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 551.384,
+        "latitude_deg_north": 31.9146,
+        "longitude_deg_west": -63.97,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 552.08,
+        "latitude_deg_north": 31.9201,
+        "longitude_deg_west": -63.92,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 552.26,
+        "latitude_deg_north": 31.9215,
+        "longitude_deg_west": -63.91,
         "source_table": "2.2",
         "source_pdf_page": 27,
         "printed_page": 21
