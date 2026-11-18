@@ -424,10 +424,10 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert provenance["status"] == (
         "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
     )
-    assert len(rows) == validation["record_count"] == 36
+    assert len(rows) == validation["record_count"] == 37
     assert validation["candidate_record_count"] == 84
     assert len(validation["incomplete_records"]) == 10
-    assert len(validation["closure_failed_records"]) == 3
+    assert len(validation["closure_failed_records"]) == 2
     assert len(validation["review_withheld_records"]) == 35
     assert (
         len(rows)
@@ -441,6 +441,8 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert rows[0]["time_from_first_motion_s"] == 161.59
     assert rows[0]["event_side"] == "post_reset"
     expected_manual_samples = {
+        180.0: (2826.64, 6456565.75, 6453059.8, 41161.1, 208729.7,
+                724.193, 113.676, 2729.928),
         201.42: (2947.38, 6472793.75, 6467060.6, 43576.1, 268865.9,
                  584.008, 111.808, 2886.782),
         200.0: (2938.77, 6471789.69, 6466225.4, 43417.3, 264777.1,
@@ -496,6 +498,7 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
             "printed_page": 21,
         }
         for time_s, latitude, longitude_west in (
+            (180.0, 28.9754, -79.29),
             (200.0, 29.0992, -78.83),
             (201.42, 29.1082, -78.79),
             (205.0, 29.1310, -78.71),
