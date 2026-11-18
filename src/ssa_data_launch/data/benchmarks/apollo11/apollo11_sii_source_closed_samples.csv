@@ -1,0 +1,24 @@
+time_from_first_motion_s,event,phase,geocentric_radius_m,inertial_speed_m_s,space_fixed_x_m,space_fixed_y_m,space_fixed_z_m,space_fixed_vx_m_s,space_fixed_vy_m_s,space_fixed_vz_m_s,event_side,event_source,transcription_corrections,source_pages
+161.59,S-IC/S-II SEP,s_ii,6440658.81,2765.96,6438562.7,39054.5,159600.6,858.782,115.035,2626.743,post_reset,Table 2.1,"PDF p.19, table 2.2 column 2: manually verified;PDF p.19, table 2.2 column 3: manually verified;PDF p.35, table 2.2 column 25: manually verified;PDF p.35, table 2.2 column 26: manually verified;PDF p.35, table 2.2 column 27: manually verified;PDF p.35, table 2.2 column 28: manually verified;PDF p.35, table 2.2 column 29: manually verified;PDF p.35, table 2.2 column 30: manually verified",19;25;27;31;33;35
+162.22,S-II ENGINE START,s_ii,6441239.5,2764.33,6439101.9,39127.0,161255.5,852.869,115.006,2626.956,,Table 2.1,"PDF p.19, table 2.2 column 3: manually verified;PDF p.19, table 2.2 column 4: manually verified;PDF p.35, table 2.2 column 25: manually verified;PDF p.35, table 2.2 column 26: manually verified;PDF p.35, table 2.2 column 27: manually verified;PDF p.35, table 2.2 column 28: manually verified;PDF p.35, table 2.2 column 29: manually verified;PDF p.35, table 2.2 column 30: manually verified",19;25;27;31;33;35
+165.22,S-II 90 THRUST,s_ii,6443959.75,2760.1,6441618.8,39471.8,169139.3,825.87,114.858,2631.143,,Table 2.1,"PDF p.19, table 2.2 column 3: manually verified;PDF p.19, table 2.2 column 4: manually verified;PDF p.19, table 2.2 column 5: manually verified;PDF p.19, table 2.2 column 6: manually verified;PDF p.19, table 2.2 column 7: manually verified;PDF p.35, table 2.2 column 25: manually verified;PDF p.35, table 2.2 column 26: manually verified;PDF p.35, table 2.2 column 27: manually verified;PDF p.35, table 2.2 column 28: manually verified;PDF p.35, table 2.2 column 29: manually verified;PDF p.35, table 2.2 column 30: manually verified",19;25;27;31;33;35
+170.0,,s_ii,6448169.69,2777.47,6445482.7,40020.2,181783.1,791.375,114.513,2659.883,,,"PDF p.25, table 2.2 column 5: manually verified;PDF p.35, table 2.2 column 25: manually verified;PDF p.35, table 2.2 column 26: manually verified;PDF p.35, table 2.2 column 27: manually verified;PDF p.35, table 2.2 column 28: manually verified;PDF p.35, table 2.2 column 29: manually verified;PDF p.35, table 2.2 column 30: manually verified",25;27;31;33;35
+175.0,,s_ii,6452435.13,2801.37,6449355.2,40591.7,195168.8,757.676,114.094,2694.544,,,"PDF p.35, table 2.2 column 25: manually verified;PDF p.35, table 2.2 column 26: manually verified;PDF p.35, table 2.2 column 27: manually verified;PDF p.35, table 2.2 column 28: manually verified;PDF p.35, table 2.2 column 29: manually verified;PDF p.35, table 2.2 column 30: manually verified",25;27;31;33;35
+185.0,,s_ii,6460563.88,2853.04,6456597.6,41728.4,222468.8,691.019,113.248,2765.775,,,,25;27;31;33;35
+190.0,,s_ii,6464432.19,2880.49,6459970.3,42293.6,236388.2,658.093,112.815,2802.041,,,,25;27;31;33;35
+195.0,,s_ii,6468173.19,2909.07,6463179.1,42856.6,250490.1,625.462,112.378,2838.816,,,,25;27;31;33;35
+220.0,,s_ii,6485142.81,3062.92,6476894.4,45640.5,323780.7,478.135,110.503,3023.349,,,,25;27;31;33;35
+230.0,,s_ii,6491250.69,3129.1,6481401.1,46742.9,354387.9,423.123,105.984,3098.407,,,,25;27;31;33;35
+235.0,,s_ii,6494167.44,3163.39,6483447.7,47292.0,369975.3,395.488,109.633,3136.658,,,,25;27;31;33;35
+275.0,,s_ii,6514348.63,3467.86,6494785.6,51639.0,501829.6,170.254,107.833,3461.999,,,,25;27;31;33;35
+360.0,,s_ii,6541036.0,4306.33,6487897.3,60657.5,829857.0,-342.56,104.237,4291.423,,,,25;27;31;33;35
+365.0,,s_ii,6542037.63,4364.69,6486103.8,61177.6,851453.4,-374.926,103.802,4347.314,,,,25;27;31;33;35
+385.0,,s_ii,6545540.63,4609.76,6477281.6,63241.2,940705.3,-508.32,102.632,4580.503,,,,25;27;31;33;35
+405.0,,s_ii,6548332.0,4874.79,6465725.9,65284.1,1034784.6,-648.47,101.676,4830.351,,,,26;28;32;34;36
+410.0,,s_ii,6548934.69,4944.41,6462393.3,65791.9,1059099.4,-684.709,101.443,4895.72,,,,26;28;32;34;36
+415.0,,s_ii,6549503.81,5015.46,6458878.0,66298.6,1083743.8,-721.472,101.21,4962.268,,,,26;28;32;34;36
+420.0,,s_ii,6550041.94,5087.99,6455177.6,66804.0,1108724.1,-758.784,100.976,5030.077,,,,26;28;32;34;36
+435.0,,s_ii,6551495.38,5314.86,6442936.7,68313.4,1185745.5,-874.256,100.269,5241.507,,,,26;28;32;34;36
+445.0,,s_ii,6552357.5,5474.38,6433795.4,69313.7,1238896.0,-954.453,99.782,5389.612,,,,26;28;32;36
+490.0,,s_ii,6555775.25,6158.17,6382369.4,73743.0,1496032.5,-1330.737,96.523,6011.897,,,,26;28;32;34;36
+545.0,,s_ii,6559712.19,6850.31,6295192.8,78905.1,1842320.8,-1851.885,91.269,6594.61,,,,26;28;32;34;36

@@ -10,6 +10,7 @@ from ssa_data_launch import (
     apollo11_benchmark,
     apollo11_sic_reference_provenance,
     apollo11_sii_initial_reference_provenance,
+    apollo11_sii_source_closed_provenance,
     data_resource,
     falcon_first_gp_provenance,
     falcon_first_gp_records,
@@ -17,6 +18,7 @@ from ssa_data_launch import (
     nasa42_case17_provenance,
     read_apollo11_sic_reference,
     read_apollo11_sii_initial_reference,
+    read_apollo11_sii_source_closed_samples,
     read_nasa42_case17_reference,
 )
 from scripts.extract_apollo11_profile import (
@@ -405,6 +407,76 @@ def test_apollo11_early_sii_reference_is_hash_pinned_and_source_closed():
         (170.0, 28.9154, -79.51, 27),
         (175.0, 28.9453, -79.40, 27),
     ]
+
+
+def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
+    provenance = apollo11_sii_source_closed_provenance()
+    resource = data_resource(
+        "benchmarks/apollo11/apollo11_sii_source_closed_samples.csv"
+    )
+    rows = read_apollo11_sii_source_closed_samples()
+    validation = provenance["validation"]
+
+    assert sha256(resource.read_bytes()).hexdigest() == provenance["output_sha256"]
+    assert provenance["source_pdf_sha256"] == (
+        "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3"
+    )
+    assert provenance["status"] == (
+        "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
+    )
+    assert len(rows) == validation["record_count"] == 23
+    assert validation["candidate_record_count"] == 84
+    assert len(validation["incomplete_records"]) == 16
+    assert len(validation["closure_failed_records"]) == 3
+    assert len(validation["review_withheld_records"]) == 42
+    assert (
+        len(rows)
+        + len(validation["incomplete_records"])
+        + len(validation["closure_failed_records"])
+        + len(validation["review_withheld_records"])
+        == validation["candidate_record_count"]
+    )
+    times = [row["time_from_first_motion_s"] for row in rows]
+    assert times == validation["sample_times_s"] == sorted(times)
+    assert rows[0]["time_from_first_motion_s"] == 161.59
+    assert rows[0]["event_side"] == "post_reset"
+    assert times[-1] == 545.0
+    assert max(right-left for left, right in zip(times, times[1:])) > 5.0
+    assert all(
+        row["phase"] == "s_ii"
+        and row["source_pages"]
+        and (
+            not row["transcription_corrections"]
+            or "manually verified" in row["transcription_corrections"]
+        )
+        for row in rows
+    )
+
+    position_residuals = [
+        abs(hypot(
+            row["space_fixed_x_m"],
+            row["space_fixed_y_m"],
+            row["space_fixed_z_m"],
+        )-row["geocentric_radius_m"])
+        for row in rows
+    ]
+    speed_residuals = [
+        abs(hypot(
+            row["space_fixed_vx_m_s"],
+            row["space_fixed_vy_m_s"],
+            row["space_fixed_vz_m_s"],
+        )-row["inertial_speed_m_s"])
+        for row in rows
+    ]
+    assert max(position_residuals) == pytest.approx(
+        validation["max_abs_position_norm_residual_m"], abs=1e-12,
+    )
+    assert max(speed_residuals) == pytest.approx(
+        validation["max_abs_velocity_norm_residual_m_s"], abs=1e-12,
+    )
+    assert max(position_residuals) <= validation["position_norm_tolerance_m"]
+    assert max(speed_residuals) <= validation["velocity_norm_tolerance_m_s"]
+    assert "sparse" in validation["interpretation"]
 
 
 def test_falcon_first_gp_records_are_pinned_and_cover_both_vehicle_families():

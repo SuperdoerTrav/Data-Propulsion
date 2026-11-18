@@ -107,6 +107,23 @@ SIC_REFERENCE_FIELDS = (
     "transcription_corrections",
     "source_pages",
 )
+SII_CLOSED_REFERENCE_FIELDS = SIC_REFERENCE_FIELDS
+STATE_CLOSURE_FIELDS = (
+    "geocentric_radius_m", "inertial_speed_m_s",
+    "space_fixed_x_m", "space_fixed_y_m", "space_fixed_z_m",
+    "space_fixed_vx_m_s", "space_fixed_vy_m_s", "space_fixed_vz_m_s",
+)
+STATE_REFERENCE_COLUMNS = frozenset({5, 8, 25, 26, 27, 28, 29, 30})
+STATE_REFERENCE_FIELD_NAMES = {
+    5: "inertial_speed_m_s",
+    8: "geocentric_radius_m",
+    25: "space_fixed_x_m",
+    26: "space_fixed_y_m",
+    27: "space_fixed_z_m",
+    28: "space_fixed_vx_m_s",
+    29: "space_fixed_vy_m_s",
+    30: "space_fixed_vz_m_s",
+}
 SIC_GEODETIC_CHECKPOINTS = (
     (0.0, 28.6084, -80.60),
     (40.0, 28.6083, -80.60),
@@ -323,11 +340,16 @@ def _extract_page(pdf, page, role, phase, directory):
             )
             assigned[column].append(word)
         raw_values = ["".join(word["text"] for word in column) for column in assigned]
-        if any(not value for value in raw_values):
-            continue
-        try:
-            values = [_number(value) for value in raw_values]
-        except ValueError:
+        values = []
+        for raw in raw_values:
+            if not raw:
+                values.append(None)
+                continue
+            try:
+                values.append(_number(raw))
+            except ValueError:
+                values.append(None)
+        if all(value is None for value in values):
             continue
         line = " ".join(word["text"] for word in words)
         event = _event(line)
@@ -348,15 +370,17 @@ def _extract_page(pdf, page, role, phase, directory):
             continue
         correction = ""
         if (page == 13 and role == "vehicle" and time_value == 30.0
-                and values[2] > 10000.0):
+                and values[2] is not None and values[2] > 10000.0):
             time_value = 90.0
             correction = "PDF p.13 row time visually verified as 90.00 s"
         previous_time = time_value
         row = {"time_from_first_motion_s": time_value, "event": event,
                "phase": phase, "_page": page, "_time_correction": correction}
         for index, value in enumerate(values):
-            row[str(offset+index)] = value
-            row[f"_raw{offset+index}"] = raw_values[index]
+            if raw_values[index]:
+                row[f"_raw{offset+index}"] = raw_values[index]
+            if value is not None:
+                row[str(offset+index)] = value
         rows.append(row)
     return rows
 
@@ -605,14 +629,22 @@ def _correct_ocr_columns(merged):
                 row = merged[key]
                 raw = row.get(f"_raw{column}")
                 value = row.get(str(column))
-                if raw is not None and value is not None:
-                    samples.append((key, raw, float(value)))
+                if raw is not None:
+                    samples.append((
+                        key, raw, None if value is None else float(value),
+                    ))
             confident = [
                 (key, value) for key, raw, value in samples
-                if any(mark in raw for mark in ".,") and minimum <= value <= maximum
+                if value is not None
+                and any(mark in raw for mark in ".,")
+                and minimum <= value <= maximum
             ]
             for sample_index, (key, raw, value) in enumerate(samples):
-                if any(mark in raw for mark in ".,") and minimum <= value <= maximum:
+                if (
+                    value is not None
+                    and any(mark in raw for mark in ".,")
+                    and minimum <= value <= maximum
+                ):
                     continue
                 candidates = _numeric_candidates(raw, minimum, maximum)
                 if not candidates:
@@ -630,7 +662,15 @@ def _correct_ocr_columns(merged):
                     expected = after[0][1]
                 else:
                     continue
-                merged[key][str(column)] = min(candidates, key=lambda item: abs(item-expected))
+                selected = min(candidates, key=lambda item: abs(item-expected))
+                merged[key][str(column)] = selected
+                if value is None or selected != value:
+                    old = "unreadable token" if value is None else str(value)
+                    merged[key].setdefault("transcription_corrections", []).append(
+                        f"column {column} changed from {old} to {selected} "
+                        f"from OCR token {raw!r} using printed-value digit candidates "
+                        "and adjacent source rows"
+                    )
 
 
 def _correct_source_vector_ocr(merged):
@@ -647,11 +687,40 @@ def _correct_source_vector_ocr(merged):
             if target in (None, ""):
                 continue
             vector = [row.get(str(offset+index)) for index in range(3)]
-            if any(value in (None, "") for value in vector):
+            tolerance = 0.5 if offset == 25 else 0.2
+            missing = [
+                index for index, value in enumerate(vector)
+                if value in (None, "")
+            ]
+            if len(missing) == 1:
+                index = missing[0]
+                raw = row.get(raw_names[index], "")
+                if not raw:
+                    continue
+                known = [
+                    float(value) if value not in (None, "") else None
+                    for value in vector
+                ]
+                candidates = _vector_digit_candidates(raw, *limits[index])
+                accepted = [
+                    candidate for candidate in candidates
+                    if abs(hypot(*(
+                        known[item] if item != index else candidate
+                        for item in range(3)
+                    ))-float(target)) <= tolerance
+                ]
+                if len(accepted) != 1:
+                    continue
+                vector[index] = accepted[0]
+                row[str(offset+index)] = accepted[0]
+                row.setdefault("transcription_corrections", []).append(
+                    f"column {offset+index} unreadable token {raw!r} uniquely "
+                    f"recovered as {accepted[0]} by printed vector-norm closure"
+                )
+            elif missing:
                 continue
             vector = [float(value) for value in vector]
 
-            tolerance = 0.5 if offset == 25 else 0.2
             raw_target = row.get(raw_target_name, "")
             if (not any(mark in raw_target for mark in ".,") and all(
                     re.fullmatch(r"[+-]?\d+(?:[.,]\d+)", row.get(name, "")) is not None
@@ -1026,16 +1095,121 @@ def extract_sii_initial(pdf):
     ]
 
 
+def extract_sii_source_closed(pdf):
+    """Return S-II rows with closed norms and uncorrected/visually checked source cells."""
+    pdf = Path(pdf)
+    if sha256(pdf.read_bytes()).hexdigest() != SOURCE_SHA256:
+        raise ValueError("input PDF does not match the pinned NASA CR-61291 source digest")
+    candidates = _merge_rows(pdf, phases={"s_ii"})
+    included = []
+    incomplete = []
+    closure_failed = []
+    review_withheld = []
+    position_residuals = []
+    speed_residuals = []
+    for row in candidates:
+        time_s = row["time_from_first_motion_s"]
+        missing = [name for name in STATE_CLOSURE_FIELDS if row.get(name, "") == ""]
+        if missing:
+            incomplete.append({"time_s": time_s, "missing_fields": missing})
+            continue
+        position = [float(row[name]) for name in (
+            "space_fixed_x_m", "space_fixed_y_m", "space_fixed_z_m",
+        )]
+        velocity = [float(row[name]) for name in (
+            "space_fixed_vx_m_s", "space_fixed_vy_m_s", "space_fixed_vz_m_s",
+        )]
+        position_residual = abs(hypot(*position)-float(row["geocentric_radius_m"]))
+        speed_residual = abs(hypot(*velocity)-float(row["inertial_speed_m_s"]))
+        if position_residual > 0.5 or speed_residual > 0.2:
+            closure_failed.append({
+                "time_s": time_s,
+                "position_norm_residual_m": position_residual,
+                "speed_norm_residual_m_s": speed_residual,
+                "source_pages": row["source_pages"],
+            })
+            continue
+        notes = [
+            note for note in row.get("transcription_corrections", "").split(";")
+            if note
+        ]
+        manually_verified = set()
+        for note in notes:
+            match = re.search(
+                r"table 2\.2 column (\d+): manually verified", note,
+            )
+            if match:
+                manually_verified.add(int(match.group(1)))
+        unreviewed_state_corrections = []
+        for note in notes:
+            match = re.match(r"(?:space-fixed component|column) (\d+)", note)
+            if (
+                match
+                and int(match.group(1)) in STATE_REFERENCE_COLUMNS
+                and int(match.group(1)) not in manually_verified
+            ):
+                unreviewed_state_corrections.append(note)
+        if unreviewed_state_corrections:
+            unverified_columns = sorted({
+                int(match.group(1))
+                for note in unreviewed_state_corrections
+                if (match := re.match(r"(?:space-fixed component|column) (\d+)", note))
+            })
+            review_withheld.append({
+                "time_s": time_s,
+                "reason": "state-field OCR correction lacks visual verification",
+                "unverified_state_fields": [
+                    {
+                        "source_table_column": column,
+                        "field": STATE_REFERENCE_FIELD_NAMES[column],
+                    }
+                    for column in unverified_columns
+                ],
+                "source_pages": row["source_pages"],
+            })
+            continue
+        row["transcription_corrections"] = ";".join(
+            note for note in notes
+            if (
+                "table 2.2 column " in note
+                and "manually verified" in note
+            )
+        )
+        included.append(row)
+        position_residuals.append(position_residual)
+        speed_residuals.append(speed_residual)
+
+    if not included:
+        raise ValueError("S-II extraction produced no source-closed state samples")
+    validation = {
+        "candidate_record_count": len(candidates),
+        "record_count": len(included),
+        "incomplete_records": incomplete,
+        "closure_failed_records": closure_failed,
+        "review_withheld_records": review_withheld,
+        "sample_times_s": [row["time_from_first_motion_s"] for row in included],
+        "max_abs_position_norm_residual_m": max(position_residuals),
+        "position_norm_tolerance_m": 0.5,
+        "max_abs_velocity_norm_residual_m_s": max(speed_residuals),
+        "velocity_norm_tolerance_m_s": 0.2,
+        "interpretation": (
+            "Only individually source-closed S-II records are included. "
+            "The samples are sparse and do not define a continuous trajectory."
+        ),
+    }
+    return included, validation
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pdf", type=Path, help="NASA CR-61291 PDF; downloaded when omitted")
     parser.add_argument(
         "--phase",
-        choices=("all", "s_ic", "s_ii_initial"),
+        choices=("all", "s_ic", "s_ii_initial", "s_ii_closed"),
         default="all",
         help=(
-            "extract the full experimental profile, the source-closed S-IC "
-            "segment, or the source-closed early S-II segment"
+            "extract the full experimental profile, source-closed S-IC or "
+            "early S-II segments, or all individually source-closed S-II samples"
         ),
     )
     parser.add_argument("--output", type=Path)
@@ -1067,6 +1241,13 @@ def main(argv=None):
                 for row in rows
             ]
             output_fields = SII_INITIAL_REFERENCE_FIELDS
+        elif args.phase == "s_ii_closed":
+            rows, validation = extract_sii_source_closed(pdf)
+            output_rows = [
+                {field: row[field] for field in SII_CLOSED_REFERENCE_FIELDS}
+                for row in rows
+            ]
+            output_fields = SII_CLOSED_REFERENCE_FIELDS
         else:
             rows = extract(pdf)
             validation = None
@@ -1086,6 +1267,8 @@ def main(argv=None):
             if args.phase == "s_ic"
             else "apollo11_sii_initial_operational_reference.csv"
             if args.phase == "s_ii_initial"
+            else "apollo11_sii_source_closed_samples.csv"
+            if args.phase == "s_ii_closed"
             else "apollo11_trajectory_ocr_unverified.csv"
         )
         output = Path(tempfile.gettempdir()) / default_name
@@ -1110,6 +1293,8 @@ def main(argv=None):
             if args.phase == "s_ic"
             else "ssa_data_launch.apollo11_sii_initial_profile.v1"
             if args.phase == "s_ii_initial"
+            else "ssa_data_launch.apollo11_sii_closed_samples.v1"
+            if args.phase == "s_ii_closed"
             else "ssa_data_launch.unverified_ocr.v1"
         ),
         "source_pdf_sha256": SOURCE_SHA256,
@@ -1118,6 +1303,8 @@ def main(argv=None):
         "status": (
             "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH"
             if args.phase in {"s_ic", "s_ii_initial"}
+            else "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
+            if args.phase == "s_ii_closed"
             else "UNVERIFIED_OCR; NOT A BENCHMARK OR FLIGHT-TRUTH DATASET"
         ),
         "software_versions": versions,
