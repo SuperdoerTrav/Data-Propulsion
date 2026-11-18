@@ -424,11 +424,11 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert provenance["status"] == (
         "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
     )
-    assert len(rows) == validation["record_count"] == 26
+    assert len(rows) == validation["record_count"] == 36
     assert validation["candidate_record_count"] == 84
-    assert len(validation["incomplete_records"]) == 16
+    assert len(validation["incomplete_records"]) == 10
     assert len(validation["closure_failed_records"]) == 3
-    assert len(validation["review_withheld_records"]) == 39
+    assert len(validation["review_withheld_records"]) == 35
     assert (
         len(rows)
         + len(validation["incomplete_records"])
@@ -441,18 +441,32 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert rows[0]["time_from_first_motion_s"] == 161.59
     assert rows[0]["event_side"] == "post_reset"
     expected_manual_samples = {
-        200.0: (
-            2938.77, 6471789.69, 6466225.4, 43417.3, 264777.1,
-            593.132, 111.936, 2876.111,
-        ),
-        205.0: (
-            2969.45, 6475284.25, 6469110.6, 43975.9, 279251.9,
-            561.007, 111.483, 2913.841,
-        ),
-        210.0: (
-            3000.23, 6478664.63, 6471841.2, 44532.4, 293913.7,
-            532.027, 111.144, 2950.591,
-        ),
+        201.42: (2947.38, 6472793.75, 6467060.6, 43576.1, 268865.9,
+                 584.008, 111.808, 2886.782),
+        200.0: (2938.77, 6471789.69, 6466225.4, 43417.3, 264777.1,
+                593.132, 111.936, 2876.111),
+        205.0: (2969.45, 6475284.25, 6469110.6, 43975.9, 279251.9,
+                561.007, 111.483, 2913.841),
+        210.0: (3000.23, 6478664.63, 6471841.2, 44532.4, 293913.7,
+                532.027, 111.144, 2950.591),
+        215.0: (3031.04, 6481949.88, 6474435.3, 45087.3, 308756.2,
+                505.490, 110.798, 2986.539),
+        225.0: (3095.61, 6488242.81, 6479216.6, 46192.4, 338990.5,
+                450.693, 110.238, 3060.636),
+        240.0: (3198.52, 6496994.25, 6485355.8, 47839.4, 385755.3,
+                367.708, 109.346, 3175.433),
+        245.0: (3234.48, 6499731.75, 6487124.6, 48385.5, 401730.5,
+                339.815, 109.108, 3214.725),
+        250.0: (3271.25, 6502381.25, 6488753.8, 48930.5, 417903.4,
+                311.822, 108.871, 3254.537),
+        255.0: (3308.86, 6504943.69, 6490242.6, 49474.3, 434276.7,
+                283.724, 108.649, 3294.884),
+        260.0: (3347.30, 6507420.38, 6491590.8, 50017.0, 450853.1,
+                255.521, 108.438, 3335.773),
+        265.0: (3386.62, 6509812.56, 6492797.7, 50558.7, 467635.4,
+                227.225, 108.231, 3377.250),
+        270.0: (3426.80, 6512121.63, 6493862.9, 51099.3, 484626.6,
+                198.813, 108.030, 3419.321),
     }
     sample_fields = (
         "inertial_speed_m_s", "geocentric_radius_m",
@@ -472,18 +486,34 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
             )
             for column in (5, 8, 25, 26, 27, 28, 29, 30)
         )
-    assert validation["geodetic_frame_checkpoints"] == [{
-        "time_s": time_s,
-        "latitude_deg_north": latitude,
-        "longitude_deg_west": longitude_west,
-        "source_table": "2.2",
-        "source_pdf_page": 27,
-        "printed_page": 21,
-    } for time_s, latitude, longitude_west in (
-        (200.0, 29.0992, -78.83),
-        (205.0, 29.1310, -78.71),
-        (210.0, 29.1631, -78.59),
-    )]
+    assert validation["geodetic_frame_checkpoints"] == [
+        {
+            "time_s": time_s,
+            "latitude_deg_north": latitude,
+            "longitude_deg_west": longitude_west,
+            "source_table": "2.2",
+            "source_pdf_page": 27,
+            "printed_page": 21,
+        }
+        for time_s, latitude, longitude_west in (
+            (200.0, 29.0992, -78.83),
+            (201.42, 29.1082, -78.79),
+            (205.0, 29.1310, -78.71),
+            (210.0, 29.1631, -78.59),
+            (215.0, 29.1954, -78.46),
+            (220.0, 29.2281, -78.34),
+            (225.0, 29.2611, -78.21),
+            (230.0, 29.2943, -78.08),
+            (235.0, 29.3279, -77.95),
+            (240.0, 29.3617, -77.82),
+            (245.0, 29.3958, -77.69),
+            (250.0, 29.4303, -77.55),
+            (255.0, 29.4650, -77.41),
+            (260.0, 29.5000, -77.27),
+            (265.0, 29.5354, -77.13),
+            (270.0, 29.5710, -76.98),
+        )
+    ]
     assert times[-1] == 545.0
     assert max(right-left for left, right in zip(times, times[1:])) > 5.0
     assert all(

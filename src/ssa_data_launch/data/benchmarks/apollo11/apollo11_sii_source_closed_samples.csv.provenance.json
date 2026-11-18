@@ -1,8 +1,8 @@
 {
   "schema": "ssa_data_launch.apollo11_sii_closed_samples.v1",
   "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
-  "output_sha256": "efcb1864c2ac7243ba4af5ac8a9c9119d949273862cb2f281630da45bd25c25d",
-  "record_count": 26,
+  "output_sha256": "39a6059b2f3d972e66ad8886acef7964abfde6f9a2dda53aa9dbf2a7df8abdfe",
+  "record_count": 36,
   "status": "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH",
   "software_versions": {
     "pdftoppm": "pdftoppm version 20.11.0",
@@ -11,44 +11,8 @@
   },
   "validation": {
     "candidate_record_count": 84,
-    "record_count": 26,
+    "record_count": 36,
     "incomplete_records": [
-      {
-        "time_s": 215.0,
-        "missing_fields": [
-          "geocentric_radius_m"
-        ]
-      },
-      {
-        "time_s": 245.0,
-        "missing_fields": [
-          "geocentric_radius_m"
-        ]
-      },
-      {
-        "time_s": 250.0,
-        "missing_fields": [
-          "geocentric_radius_m"
-        ]
-      },
-      {
-        "time_s": 255.0,
-        "missing_fields": [
-          "inertial_speed_m_s"
-        ]
-      },
-      {
-        "time_s": 265.0,
-        "missing_fields": [
-          "geocentric_radius_m"
-        ]
-      },
-      {
-        "time_s": 270.0,
-        "missing_fields": [
-          "inertial_speed_m_s"
-        ]
-      },
       {
         "time_s": 325.0,
         "missing_fields": [
@@ -141,62 +105,6 @@
       }
     ],
     "review_withheld_records": [
-      {
-        "time_s": 201.42,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 8,
-            "field": "geocentric_radius_m"
-          },
-          {
-            "source_table_column": 25,
-            "field": "space_fixed_x_m"
-          }
-        ],
-        "source_pages": "25;27;31;33;35"
-      },
-      {
-        "time_s": 225.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 8,
-            "field": "geocentric_radius_m"
-          },
-          {
-            "source_table_column": 28,
-            "field": "space_fixed_vx_m_s"
-          }
-        ],
-        "source_pages": "25;27;31;33;35"
-      },
-      {
-        "time_s": 240.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 28,
-            "field": "space_fixed_vx_m_s"
-          }
-        ],
-        "source_pages": "25;27;31;33;35"
-      },
-      {
-        "time_s": 260.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 25,
-            "field": "space_fixed_x_m"
-          },
-          {
-            "source_table_column": 27,
-            "field": "space_fixed_z_m"
-          }
-        ],
-        "source_pages": "25;27;31;33;35"
-      },
       {
         "time_s": 280.0,
         "reason": "state-field OCR correction lacks visual verification",
@@ -677,11 +585,21 @@
       190.0,
       195.0,
       200.0,
+      201.42,
       205.0,
       210.0,
+      215.0,
       220.0,
+      225.0,
       230.0,
       235.0,
+      240.0,
+      245.0,
+      250.0,
+      255.0,
+      260.0,
+      265.0,
+      270.0,
       275.0,
       360.0,
       365.0,
@@ -709,6 +627,14 @@
         "printed_page": 21
       },
       {
+        "time_s": 201.42,
+        "latitude_deg_north": 29.1082,
+        "longitude_deg_west": -78.79,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
         "time_s": 205.0,
         "latitude_deg_north": 29.131,
         "longitude_deg_west": -78.71,
@@ -720,6 +646,102 @@
         "time_s": 210.0,
         "latitude_deg_north": 29.1631,
         "longitude_deg_west": -78.59,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 215.0,
+        "latitude_deg_north": 29.1954,
+        "longitude_deg_west": -78.46,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 220.0,
+        "latitude_deg_north": 29.2281,
+        "longitude_deg_west": -78.34,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 225.0,
+        "latitude_deg_north": 29.2611,
+        "longitude_deg_west": -78.21,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 230.0,
+        "latitude_deg_north": 29.2943,
+        "longitude_deg_west": -78.08,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 235.0,
+        "latitude_deg_north": 29.3279,
+        "longitude_deg_west": -77.95,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 240.0,
+        "latitude_deg_north": 29.3617,
+        "longitude_deg_west": -77.82,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 245.0,
+        "latitude_deg_north": 29.3958,
+        "longitude_deg_west": -77.69,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 250.0,
+        "latitude_deg_north": 29.4303,
+        "longitude_deg_west": -77.55,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 255.0,
+        "latitude_deg_north": 29.465,
+        "longitude_deg_west": -77.41,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 260.0,
+        "latitude_deg_north": 29.5,
+        "longitude_deg_west": -77.27,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 265.0,
+        "latitude_deg_north": 29.5354,
+        "longitude_deg_west": -77.13,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 270.0,
+        "latitude_deg_north": 29.571,
+        "longitude_deg_west": -76.98,
         "source_table": "2.2",
         "source_pdf_page": 27,
         "printed_page": 21
