@@ -15,6 +15,24 @@ distributions before publishing the oversized artifact.
 
 ## Launch Reference Data
 
+Version 0.0.4 adds a compact three-mission source catalog and Apollo postflight
+engineering uncertainty estimates, alongside the existing operational
+trajectory CSVs, Falcon GP JSON, and NASA Case 17 inputs.
+Read `ssa_data_launch.flight_source_catalog()` for source URLs, reviewed
+digests, applicability and missing data. Read
+`ssa_data_launch.apollo11_postflight_uncertainties()` for D5-15560-6 Section
+5.2's source-stated PACSS10 component half-widths. These are engineering
+estimates, not standard deviations, a covariance matrix, or approved launch
+acceptance budgets.
+
+All numerical launch resources use compact JSON/CSV or the original small
+DAVE-ML verification inputs. No source PDFs, videos, thumbnails, OCR dumps,
+duplicate downloads or research-bundle metadata are shipped. The source catalog
+links to external Apollo reports, official Falcon webcasts and Artemis
+publications without pretending those publications supply unavailable
+numerical flight data. The full reconstructed Apollo trajectory and numerical
+Artemis BET are not included.
+
 The Apollo 11 package records selected events, launch and insertion states,
 mass checkpoints, and source discrepancies from NASA reports. The reports
 themselves are not redistributed, and the operational guidance record is not

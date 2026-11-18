@@ -8,6 +8,18 @@ The views and opinions of authors expressed herein do not necessarily state or r
 
 ## Launch reference data
 
+The compact flight-source catalog contains citations, factual evidence-scope
+notes and source hashes only. No third-party source PDFs, PowerPoints, videos,
+thumbnails or extracted document text are redistributed. The catalog preserves
+the SA-506 manual's reproduction-notice caveat and documents remaining
+provider-release requirements for Falcon and Artemis numerical telemetry.
+
+Apollo postflight engineering uncertainty estimates are factual values
+transcribed from Boeing report D5-15560-6, Section 5.2, page 5-3 (6 October
+1969). They remain source-attributed component bounds in PACSS10, not a
+statistical covariance or approval of a flight-validation result. The original
+report is linked and hash-identified but not redistributed or relicensed.
+
 The Apollo 11/AS-506 source summary is derived from NASA CR-61291, prepared by
 Northrop Corporation for NASA Marshall Space Flight Center. The report states
 that the U.S. Government has a royalty-free right to use, duplicate, and

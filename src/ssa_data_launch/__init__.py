@@ -10,7 +10,9 @@ __all__ = [
     "apollo11_sic_reference_provenance",
     "apollo11_sii_initial_reference_provenance",
     "apollo11_sii_source_closed_provenance",
+    "apollo11_postflight_uncertainties",
     "data_resource",
+    "flight_source_catalog",
     "falcon_first_gp_provenance",
     "falcon_first_gp_records",
     "nasa42_case17",
@@ -44,6 +46,18 @@ def apollo11_provenance():
 def apollo11_benchmark():
     """Return the audited Apollo 11 event and parking-orbit summary."""
     resource = data_resource("benchmarks/apollo11/apollo11_benchmark.json")
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def apollo11_postflight_uncertainties():
+    """Read PACSS10 engineering component bounds, not covariance or one-sigma errors."""
+    resource = data_resource("benchmarks/apollo11/postflight_uncertainties.json")
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def flight_source_catalog():
+    """Read compact flight-source references, evidence limits and missing data."""
+    resource = data_resource("benchmarks/flight_sources.json")
     return json.loads(resource.read_text(encoding="utf-8"))
 
 
