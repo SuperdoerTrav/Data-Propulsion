@@ -390,6 +390,21 @@ def test_apollo11_early_sii_reference_is_hash_pinned_and_source_closed():
         "Sparse source-closed early S-II states; not a continuous trajectory, "
         "flight truth, or ascent validation."
     )
+    assert [
+        (
+            point["time_s"],
+            point["latitude_deg_north"],
+            point["longitude_deg_west"],
+            point["source_pdf_page"],
+        )
+        for point in validation["geodetic_frame_checkpoints"]
+    ] == [
+        (161.59, 28.8658, -79.69, 27),
+        (162.22, 28.8695, -79.68, 27),
+        (165.22, 28.8872, -79.61, 27),
+        (170.0, 28.9154, -79.51, 27),
+        (175.0, 28.9453, -79.40, 27),
+    ]
 
 
 def test_falcon_first_gp_records_are_pinned_and_cover_both_vehicle_families():

@@ -24,7 +24,49 @@
     "position_norm_tolerance_m": 0.5,
     "max_abs_velocity_norm_residual_m_s": 0.004606811554822343,
     "velocity_norm_tolerance_m_s": 0.2,
-    "closure_definition": "Compare Euclidean norms of the six visually verified space-fixed state components to the source's scalar geocentric radius and inertial speed."
+    "closure_definition": "Compare Euclidean norms of the six visually verified space-fixed state components to the source's scalar geocentric radius and inertial speed.",
+    "geodetic_frame_checkpoints": [
+      {
+        "time_s": 161.59,
+        "latitude_deg_north": 28.8658,
+        "longitude_deg_west": -79.69,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 162.22,
+        "latitude_deg_north": 28.8695,
+        "longitude_deg_west": -79.68,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 165.22,
+        "latitude_deg_north": 28.8872,
+        "longitude_deg_west": -79.61,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 170.0,
+        "latitude_deg_north": 28.9154,
+        "longitude_deg_west": -79.51,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 175.0,
+        "latitude_deg_north": 28.9453,
+        "longitude_deg_west": -79.40,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      }
+    ]
   },
   "limitations": [
     "The trajectory is NASA real-time operational guidance-reference data, not raw telemetry or independent flight truth.",

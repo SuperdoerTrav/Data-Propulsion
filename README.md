@@ -50,6 +50,9 @@ it from the pinned report with:
 python3 scripts/extract_apollo11_profile.py \
   --phase s_ii_initial --output /tmp/apollo11_sii_initial_reference.csv
 ```
+Its provenance sidecar also records five visually transcribed Table 2.2
+geodetic checkpoints from PDF p. 27 at the same epochs for source-frame
+closure checks.
 
 The experimental extractor for the report's full 5-second trajectory table is
 retained under `scripts/`, but it does not currently pass source-closure
