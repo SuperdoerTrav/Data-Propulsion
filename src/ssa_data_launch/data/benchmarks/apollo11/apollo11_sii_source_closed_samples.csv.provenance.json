@@ -1,8 +1,8 @@
 {
   "schema": "ssa_data_launch.apollo11_sii_closed_samples.v1",
   "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
-  "output_sha256": "39a6059b2f3d972e66ad8886acef7964abfde6f9a2dda53aa9dbf2a7df8abdfe",
-  "record_count": 36,
+  "output_sha256": "57520ea75c24653c649d37338351e2cb880aecec30986ff4ed935b006d9294ec",
+  "record_count": 37,
   "status": "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH",
   "software_versions": {
     "pdftoppm": "pdftoppm version 20.11.0",
@@ -11,7 +11,7 @@
   },
   "validation": {
     "candidate_record_count": 84,
-    "record_count": 36,
+    "record_count": 37,
     "incomplete_records": [
       {
         "time_s": 325.0,
@@ -85,12 +85,6 @@
       }
     ],
     "closure_failed_records": [
-      {
-        "time_s": 180.0,
-        "position_norm_residual_m": 143832.746357969,
-        "speed_norm_residual_m_s": 0.0016044125841290224,
-        "source_pages": "25;27;31;33;35"
-      },
       {
         "time_s": 390.0,
         "position_norm_residual_m": 0.16157344728708267,
@@ -581,6 +575,7 @@
       165.22,
       170.0,
       175.0,
+      180.0,
       185.0,
       190.0,
       195.0,
@@ -618,6 +613,14 @@
     "max_abs_velocity_norm_residual_m_s": 0.1398502003894464,
     "velocity_norm_tolerance_m_s": 0.2,
     "geodetic_frame_checkpoints": [
+      {
+        "time_s": 180.0,
+        "latitude_deg_north": 28.9754,
+        "longitude_deg_west": -79.29,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
       {
         "time_s": 200.0,
         "latitude_deg_north": 29.0992,
