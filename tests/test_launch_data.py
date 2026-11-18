@@ -424,11 +424,11 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert provenance["status"] == (
         "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
     )
-    assert len(rows) == validation["record_count"] == 24
+    assert len(rows) == validation["record_count"] == 26
     assert validation["candidate_record_count"] == 84
     assert len(validation["incomplete_records"]) == 16
     assert len(validation["closure_failed_records"]) == 3
-    assert len(validation["review_withheld_records"]) == 41
+    assert len(validation["review_withheld_records"]) == 39
     assert (
         len(rows)
         + len(validation["incomplete_records"])
@@ -440,32 +440,50 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert times == validation["sample_times_s"] == sorted(times)
     assert rows[0]["time_from_first_motion_s"] == 161.59
     assert rows[0]["event_side"] == "post_reset"
-    assert 200.0 in times
-    sample_200 = next(
-        row for row in rows if row["time_from_first_motion_s"] == 200.0
+    expected_manual_samples = {
+        200.0: (
+            2938.77, 6471789.69, 6466225.4, 43417.3, 264777.1,
+            593.132, 111.936, 2876.111,
+        ),
+        205.0: (
+            2969.45, 6475284.25, 6469110.6, 43975.9, 279251.9,
+            561.007, 111.483, 2913.841,
+        ),
+        210.0: (
+            3000.23, 6478664.63, 6471841.2, 44532.4, 293913.7,
+            532.027, 111.144, 2950.591,
+        ),
+    }
+    sample_fields = (
+        "inertial_speed_m_s", "geocentric_radius_m",
+        "space_fixed_x_m", "space_fixed_y_m", "space_fixed_z_m",
+        "space_fixed_vx_m_s", "space_fixed_vy_m_s", "space_fixed_vz_m_s",
     )
-    assert sample_200["inertial_speed_m_s"] == 2938.77
-    assert sample_200["geocentric_radius_m"] == 6471789.69
-    assert sample_200["space_fixed_x_m"] == 6466225.4
-    assert sample_200["space_fixed_y_m"] == 43417.3
-    assert sample_200["space_fixed_z_m"] == 264777.1
-    assert sample_200["space_fixed_vx_m_s"] == 593.132
-    assert sample_200["space_fixed_vy_m_s"] == 111.936
-    assert sample_200["space_fixed_vz_m_s"] == 2876.111
-    assert all(
-        f"table 2.2 column {column}: manually verified" in (
-            sample_200["transcription_corrections"].lower()
+    for time_s, expected_values in expected_manual_samples.items():
+        assert time_s in times
+        sample = next(
+            row for row in rows
+            if row["time_from_first_motion_s"] == time_s
         )
-        for column in (5, 8, 25, 26, 27, 28, 29, 30)
-    )
+        assert tuple(sample[field] for field in sample_fields) == expected_values
+        assert all(
+            f"table 2.2 column {column}: manually verified" in (
+                sample["transcription_corrections"].lower()
+            )
+            for column in (5, 8, 25, 26, 27, 28, 29, 30)
+        )
     assert validation["geodetic_frame_checkpoints"] == [{
-        "time_s": 200.0,
-        "latitude_deg_north": 29.0992,
-        "longitude_deg_west": -78.83,
+        "time_s": time_s,
+        "latitude_deg_north": latitude,
+        "longitude_deg_west": longitude_west,
         "source_table": "2.2",
         "source_pdf_page": 27,
         "printed_page": 21,
-    }]
+    } for time_s, latitude, longitude_west in (
+        (200.0, 29.0992, -78.83),
+        (205.0, 29.1310, -78.71),
+        (210.0, 29.1631, -78.59),
+    )]
     assert times[-1] == 545.0
     assert max(right-left for left, right in zip(times, times[1:])) > 5.0
     assert all(
