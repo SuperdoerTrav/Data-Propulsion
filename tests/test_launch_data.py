@@ -424,11 +424,11 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert provenance["status"] == (
         "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
     )
-    assert len(rows) == validation["record_count"] == 53
+    assert len(rows) == validation["record_count"] == 56
     assert validation["candidate_record_count"] == 84
     assert len(validation["incomplete_records"]) == 7
     assert len(validation["closure_failed_records"]) == 2
-    assert len(validation["review_withheld_records"]) == 22
+    assert len(validation["review_withheld_records"]) == 19
     assert (
         len(rows)
         + len(validation["incomplete_records"])
@@ -501,6 +501,12 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
                 -278.646, 104.714, 4182.302),
         355.0: (4249.07, 6539980.50, 6489529.8, 60135.6, 808537.7,
                 -310.454, 104.485, 4236.423),
+        370.0: (4424.19, 6542987.13, 6484147.3, 61695.6, 873331.6,
+                -407.696, 103.442, 4404.148),
+        375.0: (4484.85, 6543886.19, 6482026.1, 62212.2, 895496.4,
+                -440.852, 103.175, 4461.942),
+        380.0: (4546.70, 6544736.63, 6479738.2, 62727.4, 917952.7,
+                -474.383, 102.896, 4520.716),
     }
     sample_fields = (
         "inertial_speed_m_s", "geocentric_radius_m",
@@ -569,6 +575,10 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
             (355.0, 30.2211, -74.16),
             (360.0, 30.2619, -73.97),
             (365.0, 30.3030, -73.78),
+            (370.0, 30.3443, -73.58),
+            (375.0, 30.3859, -73.38),
+            (380.0, 30.4277, -73.18),
+            (385.0, 30.4699, -72.97),
         )
     ]
     assert times[-1] == 545.0
