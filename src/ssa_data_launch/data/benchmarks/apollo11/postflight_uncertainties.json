@@ -1,0 +1,37 @@
+{
+  "schema": "ssa_data_launch.engineering_uncertainty.v1",
+  "mission": "Apollo 11 / AS-506",
+  "classification": "SOURCE_STATED_ENGINEERING_ESTIMATES",
+  "source_id": "apollo_postflight_trajectory",
+  "source": {
+    "report_id": "D5-15560-6",
+    "date": "1969-10-06",
+    "url": "https://archive.org/download/apollo-saturn-v-postflight-trajectory-as-506/apollo-saturn-v-postflight-trajectory-as-506.pdf",
+    "pdf_sha256": "9784575549a26ca6367f377df09d5dcee22713dfaefc9b6378e4888ef6d518f1",
+    "section": "5.2",
+    "printed_page": "5-3",
+    "pdf_page": 69,
+    "extraction": "Single-reader visual transcription of source page; no inferred digits",
+    "basis": "Section 5.1 information, past experience, and engineering judgment"
+  },
+  "frame": "PACSS10: Earth-fixed launch-site coordinate components",
+  "interpretation": "Plus/minus component half-widths, not Cartesian norm bounds",
+  "confidence_level": null,
+  "covariance": null,
+  "units": {"position": "m", "velocity": "m/s"},
+  "columns": ["event_or_interval", "position_component_half_width_m", "velocity_component_half_width_m_s"],
+  "estimates": [
+    ["S-IC outboard engine cutoff", 60.0, 0.4],
+    ["S-II outboard engine cutoff", 350.0, 0.7],
+    ["Parking-orbit insertion and throughout parking orbit", 500.0, 1.0],
+    ["Translunar injection", 750.0, 1.5],
+    ["Command/service module separation", 1500.0, 2.0]
+  ],
+  "limitations": [
+    "Not one-sigma errors, a covariance matrix, or approved simulation acceptance budgets.",
+    "Audit PACSS10, Fischer 1960 ellipsoid and source time origin before conversion to GCRF/GPS.",
+    "The postflight reconstruction uses tracking and onboard guidance data; it is not raw telemetry.",
+    "No complete postflight trajectory or as-flown model is packaged with these estimates."
+  ],
+  "rights": "Source-attributed factual estimates only; source PDF is not redistributed. Package software license does not license the report."
+}

@@ -18,10 +18,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Verify source data
+        run: |
+          python -m pip install pytest
+          python -m pip install -e .
+          python -m pytest
       - name: Build distributions
         run: |
           python -m pip install --upgrade pip build twine
+          rm -rf build dist
           python -m build --wheel --sdist
           python -m twine check dist/*
+          python scripts/check_distributions.py dist --version "${GITHUB_REF_NAME#v}"
       - name: Publish distributions
         uses: pypa/gh-action-pypi-publish@release/v1

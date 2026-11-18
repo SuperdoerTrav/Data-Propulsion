@@ -1,3 +1,5 @@
 include scripts/extract_apollo11_profile.py
 include scripts/extract_nasa42_case17.py
+include scripts/check_distributions.py
 include tests/test_launch_data.py
+include tests/test_compact_flight_sources.py

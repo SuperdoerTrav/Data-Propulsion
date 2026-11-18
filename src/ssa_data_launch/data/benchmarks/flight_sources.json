@@ -1,0 +1,168 @@
+{
+  "schema": "ssa_data_launch.flight_sources.v1",
+  "reviewed_utc": "2026-11-18",
+  "scope": "Compact source index; external reports and webcasts are not packaged",
+  "sources": [
+    {
+      "id": "apollo_operational",
+      "mission": "Apollo 11 / AS-506",
+      "report_id": "NASA CR-61291",
+      "url": "https://ntrs.nasa.gov/citations/19690026499",
+      "pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
+      "evidence": "Real-time operational guidance trajectory",
+      "resources": [
+        "apollo11/apollo11_benchmark.json",
+        "apollo11/apollo11_sic_reference.csv",
+        "apollo11/apollo11_sii_initial_reference.csv",
+        "apollo11/apollo11_sii_source_closed_samples.csv"
+      ],
+      "limit": "Operational source closure, not independent measured-flight validation; no full S-IVB arc."
+    },
+    {
+      "id": "apollo_postflight_trajectory",
+      "mission": "Apollo 11 / AS-506",
+      "report_id": "Boeing D5-15560-6",
+      "date": "1969-10-06",
+      "url": "https://archive.org/details/apollo-saturn-v-postflight-trajectory-as-506",
+      "pdf_sha256": "9784575549a26ca6367f377df09d5dcee22713dfaefc9b6378e4888ef6d518f1",
+      "evidence": "Reconstructed tracking/guidance trajectory; metric Appendix B and Section 5.2 engineering estimates",
+      "resources": ["apollo11/postflight_uncertainties.json"],
+      "limit": "Full numerical reconstruction not transcribed; verify coordinate/time definitions and input independence."
+    },
+    {
+      "id": "apollo_flight_evaluation",
+      "mission": "Apollo 11 / AS-506",
+      "report_id": "NASA/MSFC MPR-SAT-FE-69-9",
+      "date": "1969-09-20",
+      "url": "https://archive.org/details/saturn-v-launch-vehicle-flight-evaluation-report-as-506",
+      "pdf_sha256": "feb84bc2f6d761cc0996faf7ca74d449d83beb885b8ec67d4892f57e4ed0d212",
+      "evidence": "Postflight vehicle evaluation",
+      "resources": [],
+      "limit": "Source report located; as-flown propulsion, mass, aero and guidance inputs not yet extracted."
+    },
+    {
+      "id": "apollo_sa506_manual",
+      "mission": "Apollo 11 / AS-506",
+      "report_id": "MSFC-MAN-506, changed 1969-06-10",
+      "url": "https://www.ibiblio.org/apollo/Documents/Saturn_V_Flight_Manual_SA-506.pdf",
+      "evidence": "Mission-specific preflight manual",
+      "resources": [],
+      "limit": "233 scan pages versus 248 publication pages on effective-page list; completeness needs audit. Printed non-government reproduction restriction; do not redistribute PDF."
+    },
+    {
+      "id": "falcon_gp",
+      "mission": "Falcon 9 / EUTELSAT 10B and Falcon Heavy / ARABSAT-6A",
+      "url": "https://celestrak.org/NORAD/elements/gp-first.php",
+      "evidence": "Four postlaunch tracking-fitted SGP4 mean-element records",
+      "resources": ["falcon/falcon_first_gp.json", "falcon/falcon_first_gp.provenance.json"],
+      "limit": "No ascent/separation states, covariance or stated fit accuracy; use source-specific queries in provenance."
+    },
+    {
+      "id": "falcon_eutelsat_webcast",
+      "mission": "Falcon 9 / EUTELSAT 10B",
+      "url": "https://www.youtube.com/watch?v=QCpfvj1eiLs",
+      "title": "Eutelsat 10B Mission",
+      "author": "SpaceX",
+      "evidence": "Official webcast identity verified through YouTube oEmbed",
+      "resources": [],
+      "limit": "No numerical displays digitized. Frame/time, object identity, filtering and quantization are not qualified."
+    },
+    {
+      "id": "falcon_arabsat_webcast",
+      "mission": "Falcon Heavy / ARABSAT-6A",
+      "url": "https://www.youtube.com/watch?v=TXMGu2d8c8g",
+      "title": "Arabsat-6A Mission",
+      "author": "SpaceX",
+      "evidence": "Official webcast identity verified through YouTube oEmbed",
+      "resources": [],
+      "limit": "No numerical displays digitized; not a telemetry file or Cartesian ascent reference."
+    },
+    {
+      "id": "falcon_user_guide",
+      "mission": "Falcon family",
+      "url": "https://www.spacex.com/media/falcon-users-guide-2025-05-09.pdf",
+      "pdf_sha256": "4521d58b4366667980f6f526b92d9d17ef12d769cb5ff04d1e1d2b0ab5839b48",
+      "evidence": "Generic vehicle guide and customer-data delivery definitions",
+      "resources": [],
+      "limit": "Section 10 p.83: customer injection/postflight reports. Appendix H p.115: separation-state format; not Appendix I. Customer release required; source PDF not redistributed."
+    },
+    {
+      "id": "artemis_bet_generation",
+      "mission": "Artemis I / SLS",
+      "url": "https://ntrs.nasa.gov/citations/20230011245",
+      "pdf_sha256": "2c22b084cae008d4fd4435b6f86cead6bfe1243212c1998be845a5b63e6bb664",
+      "evidence": "2023 BET reconstruction presentation",
+      "resources": [],
+      "limit": "Presentation reports ascent data gaps; not evidence of current reconstruction status. No numerical BET attached."
+    },
+    {
+      "id": "artemis_postflight_validation",
+      "mission": "Artemis I / SLS",
+      "url": "https://ntrs.nasa.gov/citations/20250000389",
+      "pdf_sha256": "2873f7f4f1203d18e1cef3b6de0cfe1468ca07760220568586828268e0da2f7a",
+      "evidence": "NESC/SLS postflight simulation comparison with reconstructed telemetry",
+      "resources": [],
+      "limit": "Published comparison paper, not released numerical BET, covariance or corresponding model inputs."
+    },
+    {
+      "id": "artemis_reconstruction_method",
+      "mission": "Artemis I / SLS",
+      "url": "https://ntrs.nasa.gov/citations/20205004519",
+      "evidence": "Preflight reconstruction methodology",
+      "resources": [],
+      "limit": "Predates flight; not a flown parameter record."
+    },
+    {
+      "id": "artemis_base_aerodynamics",
+      "mission": "Artemis I / SLS",
+      "url": "https://ntrs.nasa.gov/citations/20240000053",
+      "pdf_sha256": "b5730fbbbaa5ce371de9704d33c39eb7939009ae155694aa2b0e37dc14519618",
+      "evidence": "Postflight base-aerodynamic reconstruction",
+      "resources": [],
+      "limit": "Partial base-force analysis, not complete six-axis aero tables."
+    },
+    {
+      "id": "sls_static_aerodynamics",
+      "mission": "SLS",
+      "url": "https://ntrs.nasa.gov/citations/20140008834",
+      "evidence": "Preflight aerodynamic database development",
+      "resources": [],
+      "limit": "Published representative data, not the complete flown database."
+    },
+    {
+      "id": "artemis_instrumentation",
+      "mission": "Artemis I / SLS",
+      "url": "https://ntrs.nasa.gov/citations/20230018511",
+      "evidence": "Developmental instrumentation publication; HOSC archive lead",
+      "resources": [],
+      "limit": "No digital measurements attached; abstract incorrectly dates Artemis I to 2020."
+    },
+    {
+      "id": "sls_guidance",
+      "mission": "SLS / Artemis",
+      "url": "https://ntrs.nasa.gov/citations/20205004411",
+      "evidence": "Guidance methods publication",
+      "resources": [],
+      "limit": "Not exact Artemis I flight software or I-loads."
+    },
+    {
+      "id": "artemis_day_of_launch",
+      "mission": "Artemis I / SLS",
+      "url": "https://ntrs.nasa.gov/citations/20230007670",
+      "evidence": "Day-of-launch loads presentation",
+      "resources": [],
+      "limit": "Describes process, not released flown command tables."
+    }
+  ],
+  "missing_data": {
+    "apollo": ["Source-closed postflight trajectory tables", "As-flown model input ledger and uncertainty applicability"],
+    "falcon": ["Numerical ascent/separation telemetry", "Mission-specific engine/mass/aero/guidance inputs", "Covariance and display-digitization audit"],
+    "artemis": ["Numerical ascent BET and covariance/quality flags", "Corresponding day-of-launch model inputs", "Exact flown guidance and event ledger"]
+  },
+  "release_routes": {
+    "falcon": "Authorized mission-customer/SpaceX release; no requests submitted.",
+    "artemis": "NASA SLS/Marshall or NESC data stewards; https://www.nasa.gov/foia/ is a records route, not a release guarantee.",
+    "apollo": "Public historical reports; audit source rights and definitions before extracting further data."
+  },
+  "rights": "Source-attributed factual catalog only. No third-party documents, videos, thumbnails or OCR text are redistributed. Source accessibility and package MIT license do not establish report/data redistribution rights."
+}
