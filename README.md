@@ -36,6 +36,21 @@ python3 scripts/extract_apollo11_profile.py \
   --phase s_ic --output /tmp/apollo11_sic_reference.csv
 ```
 
+`benchmarks/apollo11/apollo11_sii_initial_reference.csv` adds five early
+S-II event/sample states at 161.59, 162.22, 165.22, 170, and 175 s from first
+motion. The 161.59 s row is the post-separation state; the S-IC package retains
+the same-epoch pre-separation state. All six space-fixed components were
+visually checked against NASA CR-61291 Table 2.2, PDF p. 35, and each state's
+vector norms close to the report's scalar radius and speed within 0.5 m and
+0.2 m/s. This sparse operational guidance reference is not a continuous
+trajectory, raw telemetry, or independent flight truth. Recreate and validate
+it from the pinned report with:
+
+```bash
+python3 scripts/extract_apollo11_profile.py \
+  --phase s_ii_initial --output /tmp/apollo11_sii_initial_reference.csv
+```
+
 The experimental extractor for the report's full 5-second trajectory table is
 retained under `scripts/`, but it does not currently pass source-closure
 checks because it misses the S-II center-engine-cutoff row. No full-profile

@@ -115,6 +115,8 @@ SIC_GEODETIC_CHECKPOINTS = (
     (135.0, 28.7363, -80.15),
     (161.59, 28.8658, -79.69),
 )
+SII_INITIAL_TIMES = (161.59, 162.22, 165.22, 170.0, 175.0)
+SII_INITIAL_REFERENCE_FIELDS = SIC_REFERENCE_FIELDS
 
 
 def _run(command):
@@ -527,6 +529,37 @@ _VISUALLY_VERIFIED_TRANSCRIPTIONS = {
     ("s_ii", 165.22, 5): (2760.10, 19),
     ("s_ii", 165.22, 6): (71.07, 19),
     ("s_ii", 165.22, 7): (5.682, 19),
+    ("s_ii", 170.0, 5): (2777.47, 25),
+    ("s_ii", 161.59, 25): (6438562.7, 35),
+    ("s_ii", 161.59, 26): (39054.5, 35),
+    ("s_ii", 161.59, 27): (159600.6, 35),
+    ("s_ii", 161.59, 28): (858.782, 35),
+    ("s_ii", 161.59, 29): (115.035, 35),
+    ("s_ii", 161.59, 30): (2626.743, 35),
+    ("s_ii", 162.22, 25): (6439101.9, 35),
+    ("s_ii", 162.22, 26): (39127.0, 35),
+    ("s_ii", 162.22, 27): (161255.5, 35),
+    ("s_ii", 162.22, 28): (852.869, 35),
+    ("s_ii", 162.22, 29): (115.006, 35),
+    ("s_ii", 162.22, 30): (2626.956, 35),
+    ("s_ii", 165.22, 25): (6441618.8, 35),
+    ("s_ii", 165.22, 26): (39471.8, 35),
+    ("s_ii", 165.22, 27): (169139.3, 35),
+    ("s_ii", 165.22, 28): (825.870, 35),
+    ("s_ii", 165.22, 29): (114.858, 35),
+    ("s_ii", 165.22, 30): (2631.143, 35),
+    ("s_ii", 170.0, 25): (6445482.7, 35),
+    ("s_ii", 170.0, 26): (40020.2, 35),
+    ("s_ii", 170.0, 27): (181783.1, 35),
+    ("s_ii", 170.0, 28): (791.375, 35),
+    ("s_ii", 170.0, 29): (114.513, 35),
+    ("s_ii", 170.0, 30): (2659.883, 35),
+    ("s_ii", 175.0, 25): (6449355.2, 35),
+    ("s_ii", 175.0, 26): (40591.7, 35),
+    ("s_ii", 175.0, 27): (195168.8, 35),
+    ("s_ii", 175.0, 28): (757.676, 35),
+    ("s_ii", 175.0, 29): (114.094, 35),
+    ("s_ii", 175.0, 30): (2694.544, 35),
     ("s_ivb", 552.26, 3): (166492.60, 43),
     ("s_ivb", 552.38, 3): (166492.60, 43),
     ("s_ivb", 557.88, 3): (166240.40, 43),
@@ -913,14 +946,97 @@ def extract_sic(pdf):
     return rows
 
 
+def _validate_sii_initial(rows):
+    """Validate five early S-II event/sample states against printed norm fields."""
+    by_time = {
+        row["time_from_first_motion_s"]: row
+        for row in rows
+        if row["phase"] == "s_ii"
+        and row["time_from_first_motion_s"] in SII_INITIAL_TIMES
+    }
+    if set(by_time) != set(SII_INITIAL_TIMES):
+        raise ValueError(
+            "early S-II epochs differ from the pinned sample/event set; "
+            f"missing={sorted(set(SII_INITIAL_TIMES)-set(by_time))}, "
+            f"extra={sorted(set(by_time)-set(SII_INITIAL_TIMES))}"
+        )
+
+    required = (
+        "geocentric_radius_m", "inertial_speed_m_s",
+        "space_fixed_x_m", "space_fixed_y_m", "space_fixed_z_m",
+        "space_fixed_vx_m_s", "space_fixed_vy_m_s", "space_fixed_vz_m_s",
+    )
+    position_residuals = []
+    speed_residuals = []
+    for time_s in SII_INITIAL_TIMES:
+        row = by_time[time_s]
+        missing = [name for name in required if row.get(name, "") == ""]
+        if missing:
+            raise ValueError(f"S-II {time_s} s is missing {missing}")
+        position = [float(row[name]) for name in (
+            "space_fixed_x_m", "space_fixed_y_m", "space_fixed_z_m",
+        )]
+        velocity = [float(row[name]) for name in (
+            "space_fixed_vx_m_s", "space_fixed_vy_m_s", "space_fixed_vz_m_s",
+        )]
+        position_residuals.append(
+            abs(hypot(*position)-float(row["geocentric_radius_m"]))
+        )
+        speed_residuals.append(
+            abs(hypot(*velocity)-float(row["inertial_speed_m_s"]))
+        )
+
+    if max(position_residuals) > 0.5 or max(speed_residuals) > 0.2:
+        raise ValueError(
+            "early S-II source-vector closure fails: "
+            f"max radius residual {max(position_residuals):.6f} m, "
+            f"max speed residual {max(speed_residuals):.6f} m/s"
+        )
+    events = {row["event"]: row for row in by_time.values() if row["event"]}
+    expected_events = {
+        "S-IC/S-II SEP": 161.59,
+        "S-II ENGINE START": 162.22,
+        "S-II 90 THRUST": 165.22,
+    }
+    for event, expected_time in expected_events.items():
+        if event not in events or events[event]["time_from_first_motion_s"] != expected_time:
+            raise ValueError(f"early S-II reference is missing event {event!r}")
+    if by_time[161.59]["event_side"] != "post_reset":
+        raise ValueError("S-II separation reference must be the post-reset state")
+    return {
+        "sample_count": len(SII_INITIAL_TIMES),
+        "time_span_s": [min(SII_INITIAL_TIMES), max(SII_INITIAL_TIMES)],
+        "max_abs_position_norm_residual_m": max(position_residuals),
+        "position_norm_tolerance_m": 0.5,
+        "max_abs_velocity_norm_residual_m_s": max(speed_residuals),
+        "velocity_norm_tolerance_m_s": 0.2,
+    }
+
+
+def extract_sii_initial(pdf):
+    """Extract source-closed post-separation S-II event/early-ascent states."""
+    pdf = Path(pdf)
+    if sha256(pdf.read_bytes()).hexdigest() != SOURCE_SHA256:
+        raise ValueError("input PDF does not match the pinned NASA CR-61291 source digest")
+    rows = _merge_rows(pdf, phases={"s_ii"})
+    _validate_sii_initial(rows)
+    return [
+        row for row in rows
+        if row["time_from_first_motion_s"] in SII_INITIAL_TIMES
+    ]
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pdf", type=Path, help="NASA CR-61291 PDF; downloaded when omitted")
     parser.add_argument(
         "--phase",
-        choices=("all", "s_ic"),
+        choices=("all", "s_ic", "s_ii_initial"),
         default="all",
-        help="extract the full experimental profile or the source-closed S-IC segment",
+        help=(
+            "extract the full experimental profile, the source-closed S-IC "
+            "segment, or the source-closed early S-II segment"
+        ),
     )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
@@ -943,6 +1059,14 @@ def main(argv=None):
                 for row in rows
             ]
             output_fields = SIC_REFERENCE_FIELDS
+        elif args.phase == "s_ii_initial":
+            rows = extract_sii_initial(pdf)
+            validation = _validate_sii_initial(rows)
+            output_rows = [
+                {field: row[field] for field in SII_INITIAL_REFERENCE_FIELDS}
+                for row in rows
+            ]
+            output_fields = SII_INITIAL_REFERENCE_FIELDS
         else:
             rows = extract(pdf)
             validation = None
@@ -960,6 +1084,8 @@ def main(argv=None):
         default_name = (
             "apollo11_sic_operational_reference.csv"
             if args.phase == "s_ic"
+            else "apollo11_sii_initial_operational_reference.csv"
+            if args.phase == "s_ii_initial"
             else "apollo11_trajectory_ocr_unverified.csv"
         )
         output = Path(tempfile.gettempdir()) / default_name
@@ -982,6 +1108,8 @@ def main(argv=None):
         "schema": (
             "ssa_data_launch.apollo11_sic_profile.v1"
             if args.phase == "s_ic"
+            else "ssa_data_launch.apollo11_sii_initial_profile.v1"
+            if args.phase == "s_ii_initial"
             else "ssa_data_launch.unverified_ocr.v1"
         ),
         "source_pdf_sha256": SOURCE_SHA256,
@@ -989,7 +1117,7 @@ def main(argv=None):
         "record_count": len(rows),
         "status": (
             "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH"
-            if args.phase == "s_ic"
+            if args.phase in {"s_ic", "s_ii_initial"}
             else "UNVERIFIED_OCR; NOT A BENCHMARK OR FLIGHT-TRUTH DATASET"
         ),
         "software_versions": versions,

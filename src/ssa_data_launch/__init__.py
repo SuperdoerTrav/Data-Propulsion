@@ -8,12 +8,14 @@ __all__ = [
     "apollo11_benchmark",
     "apollo11_provenance",
     "apollo11_sic_reference_provenance",
+    "apollo11_sii_initial_reference_provenance",
     "data_resource",
     "falcon_first_gp_provenance",
     "falcon_first_gp_records",
     "nasa42_case17",
     "nasa42_case17_provenance",
     "read_apollo11_sic_reference",
+    "read_apollo11_sii_initial_reference",
     "read_nasa42_case17_reference",
 ]
 
@@ -51,6 +53,14 @@ def apollo11_sic_reference_provenance():
     return json.loads(resource.read_text(encoding="utf-8"))
 
 
+def apollo11_sii_initial_reference_provenance():
+    """Return source and closure metadata for the initial five-record S-II segment."""
+    resource = data_resource(
+        "benchmarks/apollo11/apollo11_sii_initial_reference.csv.provenance.json"
+    )
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
 def falcon_first_gp_provenance():
     """Return provenance and limitations for the Falcon first-GP records."""
     resource = data_resource("benchmarks/falcon/falcon_first_gp.provenance.json")
@@ -66,6 +76,25 @@ def falcon_first_gp_records():
 def read_apollo11_sic_reference():
     """Read the source-closed Apollo 11 S-IC operational state history."""
     resource = data_resource("benchmarks/apollo11/apollo11_sic_reference.csv")
+    text_columns = {
+        "phase", "event", "event_side", "event_source", "source_pages",
+        "transcription_corrections",
+    }
+    with resource.open("r", encoding="utf-8", newline="") as handle:
+        return [
+            {
+                key: value if key in text_columns or value == "" else float(value)
+                for key, value in row.items()
+            }
+            for row in csv.DictReader(handle)
+        ]
+
+
+def read_apollo11_sii_initial_reference():
+    """Read source-closed S-II staging/early-ascent operational states."""
+    resource = data_resource(
+        "benchmarks/apollo11/apollo11_sii_initial_reference.csv"
+    )
     text_columns = {
         "phase", "event", "event_side", "event_source", "source_pages",
         "transcription_corrections",

@@ -1,0 +1,35 @@
+{
+  "schema": "ssa_data_launch.apollo11_sii_initial_profile.v1",
+  "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
+  "output_sha256": "fa01b5ec93caabded3ddfb8102c7bc67720f27d9f9cee9bc5e95083863f4a5ff",
+  "record_count": 5,
+  "status": "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH",
+  "source": {
+    "citation": "Apollo 11 AS-506 Post Launch Trajectory, NASA CR-61291, Table 2.2",
+    "url": "https://ntrs.nasa.gov/citations/19690026499",
+    "pdf_pages": [19, 25, 27, 31, 33, 35],
+    "printed_pages": [13, 19, 21, 25, 27, 29],
+    "transcription_method": "OCR of pinned NASA report followed by visual verification of all six state components for each retained epoch on PDF page 35; event/scalar fields retain the source table pages listed per row."
+  },
+  "scope": {
+    "phase": "S-II",
+    "time_from_first_motion_s": [161.59, 162.22, 165.22, 170.0, 175.0],
+    "records_are_sparse": true,
+    "interpretation": "Sparse source-closed early S-II states; not a continuous trajectory, flight truth, or ascent validation."
+  },
+  "validation": {
+    "sample_count": 5,
+    "time_span_s": [161.59, 175.0],
+    "max_abs_position_norm_residual_m": 0.14998300559818745,
+    "position_norm_tolerance_m": 0.5,
+    "max_abs_velocity_norm_residual_m_s": 0.004606811554822343,
+    "velocity_norm_tolerance_m_s": 0.2,
+    "closure_definition": "Compare Euclidean norms of the six visually verified space-fixed state components to the source's scalar geocentric radius and inertial speed."
+  },
+  "limitations": [
+    "The trajectory is NASA real-time operational guidance-reference data, not raw telemetry or independent flight truth.",
+    "Only five early S-II state checkpoints are included. The remaining S-II and S-IVB rows are not source-closed and are excluded.",
+    "The S-II center-engine-cutoff time discrepancy between NASA CR-61291 Tables 2.1 and 2.4 remains unresolved.",
+    "The same-epoch 161.59 s pre-reset S-IC state remains in apollo11_sic_reference.csv; this record is the post-reset S-II state."
+  ]
+}

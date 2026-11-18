@@ -9,12 +9,14 @@ import pytest
 from ssa_data_launch import (
     apollo11_benchmark,
     apollo11_sic_reference_provenance,
+    apollo11_sii_initial_reference_provenance,
     data_resource,
     falcon_first_gp_provenance,
     falcon_first_gp_records,
     nasa42_case17,
     nasa42_case17_provenance,
     read_apollo11_sic_reference,
+    read_apollo11_sii_initial_reference,
     read_nasa42_case17_reference,
 )
 from scripts.extract_apollo11_profile import (
@@ -296,6 +298,98 @@ def test_apollo11_sic_reference_is_hash_pinned_and_source_closed():
     separation = next(row for row in rows if row["event"] == "S-IC/S-II SEP")
     assert separation["event_side"] == "pre_reset"
     assert "18" in separation["source_pages"].split(";")
+
+
+def test_apollo11_early_sii_reference_is_hash_pinned_and_source_closed():
+    provenance = apollo11_sii_initial_reference_provenance()
+    resource = data_resource(
+        "benchmarks/apollo11/apollo11_sii_initial_reference.csv"
+    )
+    rows = read_apollo11_sii_initial_reference()
+
+    assert sha256(resource.read_bytes()).hexdigest() == provenance["output_sha256"]
+    assert provenance["source_pdf_sha256"] == (
+        "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3"
+    )
+    assert provenance["status"] == (
+        "SOURCE_CLOSED_OPERATIONAL_GUIDANCE_REFERENCE; NOT FLIGHT TRUTH"
+    )
+    assert len(rows) == provenance["record_count"] == 5
+    assert [row["time_from_first_motion_s"] for row in rows] == [
+        161.59, 162.22, 165.22, 170.0, 175.0,
+    ]
+    assert all(row["phase"] == "s_ii" for row in rows)
+    assert rows[0]["event"] == "S-IC/S-II SEP"
+    assert rows[0]["event_side"] == "post_reset"
+    assert rows[1]["event"] == "S-II ENGINE START"
+    assert rows[2]["event"] == "S-II 90 THRUST"
+    assert all("35" in row["source_pages"].split(";") for row in rows)
+    assert all("PDF p.35" in row["transcription_corrections"] for row in rows)
+    expected_states = {
+        161.59: (
+            6440658.81, 2765.96,
+            (6438562.7, 39054.5, 159600.6),
+            (858.782, 115.035, 2626.743),
+        ),
+        162.22: (
+            6441239.5, 2764.33,
+            (6439101.9, 39127.0, 161255.5),
+            (852.869, 115.006, 2626.956),
+        ),
+        165.22: (
+            6443959.75, 2760.10,
+            (6441618.8, 39471.8, 169139.3),
+            (825.870, 114.858, 2631.143),
+        ),
+        170.0: (
+            6448169.69, 2777.47,
+            (6445482.7, 40020.2, 181783.1),
+            (791.375, 114.513, 2659.883),
+        ),
+        175.0: (
+            6452435.13, 2801.37,
+            (6449355.2, 40591.7, 195168.8),
+            (757.676, 114.094, 2694.544),
+        ),
+    }
+    for row in rows:
+        radius, speed, position, velocity = expected_states[
+            row["time_from_first_motion_s"]
+        ]
+        assert row["geocentric_radius_m"] == radius
+        assert row["inertial_speed_m_s"] == speed
+        assert tuple(row[f"space_fixed_{axis}_m"] for axis in "xyz") == position
+        assert tuple(row[f"space_fixed_v{axis}_m_s"] for axis in "xyz") == velocity
+
+    position_residuals = [
+        abs(hypot(
+            row["space_fixed_x_m"],
+            row["space_fixed_y_m"],
+            row["space_fixed_z_m"],
+        )-row["geocentric_radius_m"])
+        for row in rows
+    ]
+    speed_residuals = [
+        abs(hypot(
+            row["space_fixed_vx_m_s"],
+            row["space_fixed_vy_m_s"],
+            row["space_fixed_vz_m_s"],
+        )-row["inertial_speed_m_s"])
+        for row in rows
+    ]
+    validation = provenance["validation"]
+    assert max(position_residuals) == pytest.approx(
+        validation["max_abs_position_norm_residual_m"], abs=1e-12,
+    )
+    assert max(speed_residuals) == pytest.approx(
+        validation["max_abs_velocity_norm_residual_m_s"], abs=1e-12,
+    )
+    assert max(position_residuals) <= validation["position_norm_tolerance_m"]
+    assert max(speed_residuals) <= validation["velocity_norm_tolerance_m_s"]
+    assert provenance["scope"]["interpretation"] == (
+        "Sparse source-closed early S-II states; not a continuous trajectory, "
+        "flight truth, or ascent validation."
+    )
 
 
 def test_falcon_first_gp_records_are_pinned_and_cover_both_vehicle_families():
