@@ -424,11 +424,11 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert provenance["status"] == (
         "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
     )
-    assert len(rows) == validation["record_count"] == 65
+    assert len(rows) == validation["record_count"] == 70
     assert validation["candidate_record_count"] == 84
-    assert len(validation["incomplete_records"]) == 5
+    assert len(validation["incomplete_records"]) == 3
     assert len(validation["closure_failed_records"]) == 0
-    assert len(validation["review_withheld_records"]) == 14
+    assert len(validation["review_withheld_records"]) == 11
     assert (
         len(rows)
         + len(validation["incomplete_records"])
@@ -525,6 +525,16 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
                 -1037.492, 99.286, 5543.949),
         460.0: (5727.26, 6553550.44, 6418544.3, 70804.8, 1321476.5,
                 -1080.158, 99.035, 5623.610),
+        465.0: (5799.29, 6553926.06, 6413034.4, 71299.3, 1349760.6,
+                -1123.978, 98.799, 5688.469),
+        470.0: (5870.23, 6554281.75, 6407306.3, 71792.8, 1378362.1,
+                -1166.588, 98.539, 5752.296),
+        475.0: (5941.50, 6554637.94, 6401375.2, 72284.2, 1407285.0,
+                -1205.748, 98.019, 5817.038),
+        480.0: (6014.27, 6555006.44, 6395246.9, 72777.0, 1436534.5,
+                -1245.837, 97.494, 5883.008),
+        485.0: (6088.74, 6555386.38, 6388914.3, 73259.2, 1466117.1,
+                -1287.500, 96.993, 5950.272),
     }
     sample_fields = (
         "inertial_speed_m_s", "geocentric_radius_m",
@@ -611,6 +621,12 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
             (450.0, 31.0371, -69.97),
             (455.0, 31.0820, -69.71),
             (460.0, 31.1270, -69.44),
+            (465.0, 31.1720, -69.17),
+            (470.0, 31.2170, -68.90),
+            (475.0, 31.2619, -68.63),
+            (480.0, 31.3067, -68.35),
+            (485.0, 31.3514, -68.06),
+            (490.0, 31.3960, -67.78),
         )
     ]
     assert times[-1] == 545.0
