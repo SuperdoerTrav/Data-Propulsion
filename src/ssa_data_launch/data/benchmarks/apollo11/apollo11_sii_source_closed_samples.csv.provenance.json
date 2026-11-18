@@ -1,8 +1,8 @@
 {
   "schema": "ssa_data_launch.apollo11_sii_closed_samples.v1",
   "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
-  "output_sha256": "b4d2412c102638ca8c6e420274815bd69e3700ce2b560d343d462572dd7828b4",
-  "record_count": 61,
+  "output_sha256": "2ed66f4542fd2feb36ccc0c97f8a59be7cfbe3367b137467384df69e6cab5fb5",
+  "record_count": 65,
   "status": "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH",
   "software_versions": {
     "pdftoppm": "pdftoppm version 20.11.0",
@@ -11,14 +11,8 @@
   },
   "validation": {
     "candidate_record_count": 84,
-    "record_count": 61,
+    "record_count": 65,
     "incomplete_records": [
-      {
-        "time_s": 450.0,
-        "missing_fields": [
-          "geocentric_radius_m"
-        ]
-      },
       {
         "time_s": 470.0,
         "missing_fields": [
@@ -52,43 +46,6 @@
     ],
     "closure_failed_records": [],
     "review_withheld_records": [
-      {
-        "time_s": 440.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 25,
-            "field": "space_fixed_x_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 455.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 30,
-            "field": "space_fixed_vz_m_s"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 460.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 8,
-            "field": "geocentric_radius_m"
-          },
-          {
-            "source_table_column": 27,
-            "field": "space_fixed_z_m"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
       {
         "time_s": 465.0,
         "reason": "state-field OCR correction lacks visual verification",
@@ -335,7 +292,11 @@
       425.0,
       430.0,
       435.0,
+      440.0,
       445.0,
+      450.0,
+      455.0,
+      460.0,
       490.0,
       545.0
     ],
@@ -756,6 +717,46 @@
         "time_s": 430.0,
         "latitude_deg_north": 30.8591,
         "longitude_deg_west": -70.96,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 440.0,
+        "latitude_deg_north": 30.9478,
+        "longitude_deg_west": -70.47,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 445.0,
+        "latitude_deg_north": 30.9924,
+        "longitude_deg_west": -70.22,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 450.0,
+        "latitude_deg_north": 31.0371,
+        "longitude_deg_west": -69.97,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 455.0,
+        "latitude_deg_north": 31.082,
+        "longitude_deg_west": -69.71,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 460.0,
+        "latitude_deg_north": 31.127,
+        "longitude_deg_west": -69.44,
         "source_table": "2.2",
         "source_pdf_page": 27,
         "printed_page": 21
