@@ -20,3 +20,12 @@ Volumes I and II, and the NESC Academy 2015 Flight Simulation Checkcases
 collection. The reports and model archive are not redistributed. These source
 materials are not covered by the MIT license for the package software; see the
 benchmark provenance for source URLs, hashes, transformations, and limitations.
+
+The Falcon 9 and Falcon Heavy benchmark records contain selected CelesTrak
+General Perturbations fields for four unclassified catalog objects. CelesTrak
+states that GP data are government-provided and fitted to Space Surveillance
+Network observations. The records are attributed to CelesTrak; the service's
+current usage policy applies to acquisition. No separate redistribution
+license was identified in the cited source documentation. These factual
+catalog fits are not covered by the MIT license for package software; see
+their provenance for source access, fields, and limitations.

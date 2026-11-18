@@ -9,6 +9,8 @@ __all__ = [
     "apollo11_provenance",
     "apollo11_sic_reference_provenance",
     "data_resource",
+    "falcon_first_gp_provenance",
+    "falcon_first_gp_records",
     "nasa42_case17",
     "nasa42_case17_provenance",
     "read_apollo11_sic_reference",
@@ -46,6 +48,18 @@ def apollo11_sic_reference_provenance():
     resource = data_resource(
         "benchmarks/apollo11/apollo11_sic_reference.csv.provenance.json"
     )
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def falcon_first_gp_provenance():
+    """Return provenance and limitations for the Falcon first-GP records."""
+    resource = data_resource("benchmarks/falcon/falcon_first_gp.provenance.json")
+    return json.loads(resource.read_text(encoding="utf-8"))
+
+
+def falcon_first_gp_records():
+    """Return four CelesTrak GP OMM records for Falcon 9 and Falcon Heavy."""
+    resource = data_resource("benchmarks/falcon/falcon_first_gp.json")
     return json.loads(resource.read_text(encoding="utf-8"))
 
 

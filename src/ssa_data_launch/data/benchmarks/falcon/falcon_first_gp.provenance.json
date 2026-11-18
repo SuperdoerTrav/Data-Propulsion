@@ -1,0 +1,63 @@
+{
+  "schema": "ssa_data_launch.provenance.v1",
+  "dataset": "Falcon 9 and Falcon Heavy first-available GP fits",
+  "status": "PUBLIC_GP_FITS; NOT ASCENT TELEMETRY",
+  "retrieved_utc": "2026-11-18T01:38:54Z",
+  "record_count": 4,
+  "payload": "falcon_first_gp.json",
+  "payload_sha256": "f47db79e432b1d3192db30d9a77dead5925be48eb09288317579cdc4b434fd4d",
+  "sources": [
+    {
+      "provider": "CelesTrak",
+      "product": "earliest available General Perturbations records by international designator",
+      "url": "https://celestrak.org/NORAD/elements/gp-first.php?INTDES=2022-157&FORMAT=JSON",
+      "launch": "EUTELSAT 10B, Falcon 9",
+      "objects": ["2022-157A", "2022-157B"]
+    },
+    {
+      "provider": "CelesTrak",
+      "product": "earliest available General Perturbations records by international designator",
+      "url": "https://celestrak.org/NORAD/elements/gp-first.php?INTDES=2019-021&FORMAT=JSON",
+      "launch": "ARABSAT-6A, Falcon Heavy",
+      "objects": ["2019-021A", "2019-021B"]
+    },
+    {
+      "provider": "CelesTrak",
+      "product": "Satellite Catalog records identifying object type, launch date, and launch site",
+      "url": "https://celestrak.org/satcat/records.php?INTDES=2022-157&FORMAT=JSON"
+    },
+    {
+      "provider": "CelesTrak",
+      "product": "Satellite Catalog records identifying object type, launch date, and launch site",
+      "url": "https://celestrak.org/satcat/records.php?INTDES=2019-021&FORMAT=JSON"
+    },
+    {
+      "provider": "CelesTrak",
+      "product": "General Perturbations data formats and omitted mandatory defaults",
+      "url": "https://celestrak.org/NORAD/documentation/gp-data-formats.php"
+    },
+    {
+      "provider": "CelesTrak",
+      "product": "usage policy",
+      "url": "https://celestrak.org/usage-policy.php"
+    }
+  ],
+  "interpretation": {
+    "data_origin": "CelesTrak describes GP data as government-provided and fitted to U.S. Space Surveillance Network observations.",
+    "record_type": "Brouwer mean elements for SGP4 propagation, not osculating insertion elements.",
+    "omitted_omm_defaults": {
+      "CENTER_NAME": "EARTH",
+      "REF_FRAME": "TEME",
+      "TIME_SYSTEM": "UTC",
+      "MEAN_ELEMENT_THEORY": "SGP4"
+    },
+    "object_scope": "Each launch has one payload and one upper-stage rocket-body record. The rocket-body fit is not a launch-vehicle ascent state history.",
+    "uncertainty": "No covariance or stated orbit-fit accuracy is included in the source records.",
+    "validation_scope": "Supports explicitly labeled postlaunch SGP4 orbit-fit comparisons only. It does not support ascent validation, separation-state validation, or vehicle-parameter inference."
+  },
+  "data_rights": {
+    "classification": "All four source records are marked U (unclassified).",
+    "license": "No separate redistribution license was identified in the cited CelesTrak documentation. The package MIT license does not apply to this dataset.",
+    "usage_policy": "Follow the current CelesTrak usage policy when retrieving data; request only needed records and do not query more frequently than documented."
+  }
+}

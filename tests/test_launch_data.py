@@ -10,6 +10,8 @@ from ssa_data_launch import (
     apollo11_benchmark,
     apollo11_sic_reference_provenance,
     data_resource,
+    falcon_first_gp_provenance,
+    falcon_first_gp_records,
     nasa42_case17,
     nasa42_case17_provenance,
     read_apollo11_sic_reference,
@@ -294,6 +296,27 @@ def test_apollo11_sic_reference_is_hash_pinned_and_source_closed():
     separation = next(row for row in rows if row["event"] == "S-IC/S-II SEP")
     assert separation["event_side"] == "pre_reset"
     assert "18" in separation["source_pages"].split(";")
+
+
+def test_falcon_first_gp_records_are_pinned_and_cover_both_vehicle_families():
+    records = falcon_first_gp_records()
+    provenance = falcon_first_gp_provenance()
+    resource = data_resource("benchmarks/falcon/falcon_first_gp.json")
+
+    assert sha256(resource.read_bytes()).hexdigest() == provenance["payload_sha256"]
+    assert len(records) == provenance["record_count"] == 4
+    assert {
+        (record["OBJECT_ID"], record["OBJECT_NAME"], record["EPOCH"])
+        for record in records
+    } == {
+        ("2022-157A", "EUTELSAT 10B", "2022-11-23T05:18:12.220992"),
+        ("2022-157B", "FALCON 9 R/B", "2022-11-23T08:32:56.609664"),
+        ("2019-021A", "ARABSAT-6A", "2019-04-12T00:41:56.374080"),
+        ("2019-021B", "FALCON HEAVY R/B", "2019-04-12T02:59:52.266336"),
+    }
+    assert all(record["CLASSIFICATION_TYPE"] == "U" for record in records)
+    assert provenance["status"] == "PUBLIC_GP_FITS; NOT ASCENT TELEMETRY"
+    assert "covariance" not in provenance
 
 
 def test_apollo11_launch_site_longitude_conventions_close():
