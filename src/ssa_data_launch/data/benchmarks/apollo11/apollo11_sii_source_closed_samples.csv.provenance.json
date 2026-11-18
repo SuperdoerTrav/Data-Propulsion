@@ -1,8 +1,8 @@
 {
   "schema": "ssa_data_launch.apollo11_sii_closed_samples.v1",
   "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
-  "output_sha256": "b598c756d28b00b86652e8f4a35d41877e876b23cbf232a58a36a927d471cdf7",
-  "record_count": 23,
+  "output_sha256": "5f517ae44429a11f67d60e8cd994d7761c61a4cfb2ddb5cfc11ab0c619d4acf0",
+  "record_count": 24,
   "status": "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH",
   "software_versions": {
     "pdftoppm": "pdftoppm version 20.11.0",
@@ -11,7 +11,7 @@
   },
   "validation": {
     "candidate_record_count": 84,
-    "record_count": 23,
+    "record_count": 24,
     "incomplete_records": [
       {
         "time_s": 215.0,
@@ -141,29 +141,6 @@
       }
     ],
     "review_withheld_records": [
-      {
-        "time_s": 200.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 8,
-            "field": "geocentric_radius_m"
-          },
-          {
-            "source_table_column": 25,
-            "field": "space_fixed_x_m"
-          },
-          {
-            "source_table_column": 26,
-            "field": "space_fixed_y_m"
-          },
-          {
-            "source_table_column": 27,
-            "field": "space_fixed_z_m"
-          }
-        ],
-        "source_pages": "25;27;31;33;35"
-      },
       {
         "time_s": 201.42,
         "reason": "state-field OCR correction lacks visual verification",
@@ -721,6 +698,7 @@
       185.0,
       190.0,
       195.0,
+      200.0,
       220.0,
       230.0,
       235.0,

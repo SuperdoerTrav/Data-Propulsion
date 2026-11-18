@@ -55,13 +55,15 @@ geodetic checkpoints from PDF p. 27 at the same epochs for source-frame
 closure checks.
 
 `benchmarks/apollo11/apollo11_sii_source_closed_samples.csv` is a broader but
-still sparse set of 23 S-II samples selected from the 84 event/sample epochs
+still sparse set of 24 S-II samples selected from the 84 event/sample epochs
 in Table 2.2. The extractor includes rows only when all six state components
 and scalar radius/speed are present, their norm residuals are within 0.5 m and
-0.2 m/s, and state-field OCR changes have visual verification. Its provenance
-sidecar lists 16 incomplete, 3 closure-failed, and 42 correction-withheld
-epochs. The samples contain gaps and do not define a continuous trajectory or
-flight-validation arc. Recreate them with:
+0.2 m/s, and state-field OCR changes have visual verification. The 200 s row
+was manually checked against the vehicle, geodetic, and space-fixed tables on
+PDF pages 25, 27, and 35. Its provenance sidecar lists 16 incomplete, 3
+closure-failed, and 41 correction-withheld epochs. The samples contain gaps
+and do not define a continuous trajectory or flight-validation arc. Recreate
+them with:
 
 ```bash
 python3 scripts/extract_apollo11_profile.py \
