@@ -54,6 +54,8 @@ time_from_first_motion_s,event,phase,geocentric_radius_m,inertial_speed_m_s,spac
 410.0,,s_ii,6548934.69,4944.41,6462393.3,65791.9,1059099.4,-684.709,101.443,4895.72,,,,26;28;32;34;36
 415.0,,s_ii,6549503.81,5015.46,6458878.0,66298.6,1083743.8,-721.472,101.21,4962.268,,,,26;28;32;34;36
 420.0,,s_ii,6550041.94,5087.99,6455177.6,66804.0,1108724.1,-758.784,100.976,5030.077,,,,26;28;32;34;36
+425.0,,s_ii,6550551.44,5162.03,6451289.3,67308.3,1134046.7,-796.668,100.742,5099.19,,,"PDF p.26, table 2.2 column 5: manually verified;PDF p.28, table 2.2 column 8: manually verified;PDF p.36, table 2.2 column 25: manually verified;PDF p.36, table 2.2 column 26: manually verified;PDF p.36, table 2.2 column 27: manually verified;PDF p.36, table 2.2 column 28: manually verified;PDF p.36, table 2.2 column 29: manually verified;PDF p.36, table 2.2 column 30: manually verified",26;28;32;34;36
+430.0,,s_ii,6551035.0,5237.64,6447209.9,67811.5,1159718.2,-835.15,100.508,5169.651,,,"PDF p.26, table 2.2 column 5: manually verified;PDF p.28, table 2.2 column 8: manually verified;PDF p.36, table 2.2 column 25: manually verified;PDF p.36, table 2.2 column 26: manually verified;PDF p.36, table 2.2 column 27: manually verified;PDF p.36, table 2.2 column 28: manually verified;PDF p.36, table 2.2 column 29: manually verified;PDF p.36, table 2.2 column 30: manually verified",26;28;32;34;36
 435.0,,s_ii,6551495.38,5314.86,6442936.7,68313.4,1185745.5,-874.256,100.269,5241.507,,,,26;28;32;34;36
 445.0,,s_ii,6552357.5,5474.38,6433795.4,69313.7,1238896.0,-954.453,99.782,5389.612,,,,26;28;32;36
 490.0,,s_ii,6555775.25,6158.17,6382369.4,73743.0,1496032.5,-1330.737,96.523,6011.897,,,,26;28;32;34;36
