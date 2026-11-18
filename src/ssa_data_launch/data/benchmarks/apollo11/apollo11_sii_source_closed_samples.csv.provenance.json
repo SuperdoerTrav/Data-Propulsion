@@ -1,8 +1,8 @@
 {
   "schema": "ssa_data_launch.apollo11_sii_closed_samples.v1",
   "source_pdf_sha256": "55b94c5947c91a3cd0539601517c82941a04ec9631dbb90458275664b855a7b3",
-  "output_sha256": "876cd0a9d7fb56993746106e37b89b0f6eddefee5b8d1842c4d6fdf86addd3b7",
-  "record_count": 56,
+  "output_sha256": "a333a9227996ce96bb853a0725c64611c0b37454100f38caf8d718f2e82c1ff3",
+  "record_count": 59,
   "status": "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH",
   "software_versions": {
     "pdftoppm": "pdftoppm version 20.11.0",
@@ -11,7 +11,7 @@
   },
   "validation": {
     "candidate_record_count": 84,
-    "record_count": 56,
+    "record_count": 59,
     "incomplete_records": [
       {
         "time_s": 425.0,
@@ -63,12 +63,6 @@
     ],
     "closure_failed_records": [
       {
-        "time_s": 390.0,
-        "position_norm_residual_m": 0.16157344728708267,
-        "speed_norm_residual_m_s": 0.8353674609052177,
-        "source_pages": "26;28;32;34;36"
-      },
-      {
         "time_s": 430.0,
         "position_norm_residual_m": 299732.40793156717,
         "speed_norm_residual_m_s": 0.00037490502836590167,
@@ -76,28 +70,6 @@
       }
     ],
     "review_withheld_records": [
-      {
-        "time_s": 395.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 30,
-            "field": "space_fixed_vz_m_s"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
-      {
-        "time_s": 400.0,
-        "reason": "state-field OCR correction lacks visual verification",
-        "unverified_state_fields": [
-          {
-            "source_table_column": 30,
-            "field": "space_fixed_vz_m_s"
-          }
-        ],
-        "source_pages": "26;28;32;34;36"
-      },
       {
         "time_s": 440.0,
         "reason": "state-field OCR correction lacks visual verification",
@@ -371,6 +343,9 @@
       375.0,
       380.0,
       385.0,
+      390.0,
+      395.0,
+      400.0,
       405.0,
       410.0,
       415.0,
@@ -725,6 +700,62 @@
         "time_s": 385.0,
         "latitude_deg_north": 30.4699,
         "longitude_deg_west": -72.97,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 390.0,
+        "latitude_deg_north": 30.5122,
+        "longitude_deg_west": -72.76,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 395.0,
+        "latitude_deg_north": 30.5548,
+        "longitude_deg_west": -72.55,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 400.0,
+        "latitude_deg_north": 30.5976,
+        "longitude_deg_west": -72.33,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 405.0,
+        "latitude_deg_north": 30.6407,
+        "longitude_deg_west": -72.11,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 410.0,
+        "latitude_deg_north": 30.6839,
+        "longitude_deg_west": -71.89,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 415.0,
+        "latitude_deg_north": 30.7274,
+        "longitude_deg_west": -71.66,
+        "source_table": "2.2",
+        "source_pdf_page": 27,
+        "printed_page": 21
+      },
+      {
+        "time_s": 420.0,
+        "latitude_deg_north": 30.7711,
+        "longitude_deg_west": -71.43,
         "source_table": "2.2",
         "source_pdf_page": 27,
         "printed_page": 21
