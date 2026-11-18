@@ -54,20 +54,21 @@ Its provenance sidecar also records five visually transcribed Table 2.2
 geodetic checkpoints from PDF p. 27 at the same epochs for source-frame
 closure checks.
 
-`benchmarks/apollo11/apollo11_sii_source_closed_samples.csv` is a broader but
-still sparse set of 70 S-II samples selected from the 84 event/sample epochs
-in Table 2.2. The extractor includes rows only when all six state components
+`benchmarks/apollo11/apollo11_sii_source_closed_samples.csv` contains all 84
+source-closed S-II event/sample epochs in Table 2.2. The extractor includes
+rows only when all six state components
 and scalar radius/speed are present, their norm residuals are within 0.5 m and
-0.2 m/s, and state-field OCR changes have visual verification. The 180, 200,
-201.42, 205, 210, 215, 225, 240, 245-270, 280-355, 370-380, 390-400,
-425-430, 440, and 450-485 s rows were manually checked against the vehicle,
-geodetic, and space-fixed tables on PDF pages 25-28 and 35-36. The provenance
-sidecar includes geodetic checkpoints every 5 s from 180 through 490 s, plus
-the 201.42 s event. It lists 3 incomplete, 0 closure-failed, and 11
-correction-withheld epochs. The samples form a 5 s sampled interval from 175
-to 490 s but remain sparse outside it;
-they do not define a continuous trajectory or flight-validation arc. Recreate
-them with:
+0.2 m/s, and state-field optical character recognition (OCR) corrections have
+visual verification. The provenance sidecar records every correction and
+source page for the vehicle, geodetic, and space-fixed Table 2.2 cells on PDF
+pages 25-28 and 35-36. It also records 78 geodetic checkpoints from 180
+through 552.26 s, plus the 201.42 s event, and accounts for all 84 candidates:
+0 incomplete, 0 closure-failed, and 0 correction-withheld. Ordinary state rows
+are sampled every 5 s from 175 through 550 s; the 551.38 s printed S-II cutoff
+row is retained at event-ledger time 551.384 s, followed by the 552.08 s
+ullage-ignition and 552.26 s separation rows. These form a discrete operational
+guidance reference, not raw telemetry, independent flight truth, or a
+continuously integrated trajectory. Recreate the samples with:
 
 ```bash
 python3 scripts/extract_apollo11_profile.py \
@@ -76,10 +77,10 @@ python3 scripts/extract_apollo11_profile.py \
 The checkpoint coordinates were manually transcribed from Table 2.2 PDF p. 27
 for source-frame consistency checks.
 
-The experimental extractor for the report's full 5-second trajectory table is
-retained under `scripts/`, but it does not currently pass source-closure
-checks because it misses the S-II center-engine-cutoff row. No full-profile
-trajectory is included.
+The experimental OCR extractor for the complete report trajectory table is
+retained under `scripts/`; it is not the authority for the manually verified
+S-II reference above. No full multi-phase profile or side-channel package is
+included.
 
 The NASA NESC Case 17 package contains the published idealized two-stage
 verification model and anonymized reference histories. It is not a flown
