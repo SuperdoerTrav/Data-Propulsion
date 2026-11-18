@@ -424,11 +424,11 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert provenance["status"] == (
         "PARTIAL_SOURCE_CLOSED_OPERATIONAL_GUIDANCE_SAMPLES; NOT FLIGHT TRUTH"
     )
-    assert len(rows) == validation["record_count"] == 23
+    assert len(rows) == validation["record_count"] == 24
     assert validation["candidate_record_count"] == 84
     assert len(validation["incomplete_records"]) == 16
     assert len(validation["closure_failed_records"]) == 3
-    assert len(validation["review_withheld_records"]) == 42
+    assert len(validation["review_withheld_records"]) == 41
     assert (
         len(rows)
         + len(validation["incomplete_records"])
@@ -440,6 +440,24 @@ def test_apollo11_sii_sparse_samples_fail_closed_and_audit_exclusions():
     assert times == validation["sample_times_s"] == sorted(times)
     assert rows[0]["time_from_first_motion_s"] == 161.59
     assert rows[0]["event_side"] == "post_reset"
+    assert 200.0 in times
+    sample_200 = next(
+        row for row in rows if row["time_from_first_motion_s"] == 200.0
+    )
+    assert sample_200["inertial_speed_m_s"] == 2938.77
+    assert sample_200["geocentric_radius_m"] == 6471789.69
+    assert sample_200["space_fixed_x_m"] == 6466225.4
+    assert sample_200["space_fixed_y_m"] == 43417.3
+    assert sample_200["space_fixed_z_m"] == 264777.1
+    assert sample_200["space_fixed_vx_m_s"] == 593.132
+    assert sample_200["space_fixed_vy_m_s"] == 111.936
+    assert sample_200["space_fixed_vz_m_s"] == 2876.111
+    assert all(
+        f"table 2.2 column {column}: manually verified" in (
+            sample_200["transcription_corrections"].lower()
+        )
+        for column in (5, 8, 25, 26, 27, 28, 29, 30)
+    )
     assert times[-1] == 545.0
     assert max(right-left for left, right in zip(times, times[1:])) > 5.0
     assert all(
