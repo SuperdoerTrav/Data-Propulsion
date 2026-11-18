@@ -134,6 +134,9 @@ SIC_GEODETIC_CHECKPOINTS = (
 )
 SII_INITIAL_TIMES = (161.59, 162.22, 165.22, 170.0, 175.0)
 SII_INITIAL_REFERENCE_FIELDS = SIC_REFERENCE_FIELDS
+SII_SOURCE_CLOSED_GEODETIC_CHECKPOINTS = (
+    (200.0, 29.0992, -78.83),
+)
 
 
 def _run(command):
@@ -1200,6 +1203,18 @@ def extract_sii_source_closed(pdf):
         "position_norm_tolerance_m": 0.5,
         "max_abs_velocity_norm_residual_m_s": max(speed_residuals),
         "velocity_norm_tolerance_m_s": 0.2,
+        "geodetic_frame_checkpoints": [
+            {
+                "time_s": time_s,
+                "latitude_deg_north": latitude,
+                "longitude_deg_west": longitude_west,
+                "source_table": "2.2",
+                "source_pdf_page": 27,
+                "printed_page": 21,
+            }
+            for time_s, latitude, longitude_west
+            in SII_SOURCE_CLOSED_GEODETIC_CHECKPOINTS
+        ],
         "interpretation": (
             "Only individually source-closed S-II records are included. "
             "The samples are sparse and do not define a continuous trajectory."
